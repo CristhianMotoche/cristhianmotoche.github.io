@@ -22,8 +22,6 @@ deployment:
     commands:
       - git config --global user.email cristhian.motoche@gmail.com
       - git config --global user.name CristhianMotoche
-      - echo "camm-blog.me" >> _site/CNAME
-      - echo "www.camm-blog.me" >> _site/CNAME
       - cd _site/ && git status
       - cd _site/ && git add --all
       - cd _site/ && git commit -m "Update (`date '+%F %T %Z'`) [ci skip]"
