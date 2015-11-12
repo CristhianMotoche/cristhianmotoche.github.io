@@ -20,11 +20,11 @@ deployment:
   production:
     branch: hakyll
     commands:
-      - git config --global user.email circleci@circleci
-      - git config --global user.name CircleCI
+      - git config --global user.email cristhian.motoche@gmail.com
+      - git config --global user.name CristhianMotoche
+      - echo "camm-blog.me" >> _site/CNAME
+      - echo "www.camm-blog.me" >> _site/CNAME
       - cd _site/ && git status
-      - echo "camm-blog.me" >> CNAME
-      - echo "www.camm-blog.me" >> CNAME
       - cd _site/ && git add --all
       - cd _site/ && git commit -m "Update (`date '+%F %T %Z'`) [ci skip]"
       - cd _site/ && git push origin master
