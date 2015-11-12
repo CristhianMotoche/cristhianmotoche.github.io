@@ -1,4 +1,1 @@
----
-title: About
----
 Cristhian Motoche.
