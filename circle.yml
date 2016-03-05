@@ -7,6 +7,11 @@ dependencies:
     - cabal sandbox init
     - cabal install --only-dependencies -j
     - cabal configure
+  pre:
+    - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.6 20
+    - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.6 20
+    - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 10
+    - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 10
 test:
   override:
     - cabal build
