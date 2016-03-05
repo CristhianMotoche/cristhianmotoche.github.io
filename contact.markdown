@@ -1,7 +1,15 @@
 ---
 title: Contact
 ---
-I'm a Systems Engineering student from Quito, Ecuador. I start this blog post page to improve my writting and to
-teach other people the things I'm working on.
+
+You can contact me in:
+
+Twitter:
+
 
 [@ camm_v222](https://twitter.com/camm_v222 "Twitter")
+
+Mail:
+
+[cristhian.motoche@gmail.com](cristhian.motoche@gmail.com)
+[criz_mm@hotmail.com](criz_mm@hotmail)
