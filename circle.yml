@@ -2,6 +2,8 @@ machine:
   ghc:
     version: 7.10.1
 dependencies:
+  cache_directories:
+    - ".cabal-sandbox/"
   override:
     - cabal update
     - cabal sandbox init
