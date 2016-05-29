@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Camm Blog - Building - Introducción a Aeson - ES</title>
+        <link rel="icon" type="image/png" href="../images/devi.png">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <link href="css/sticky-footer-navbar.css" rel="stylesheet">
+    </head>
+    <body>
+
+        <div class="container" style="padding-top:10px">
+            <div id="logo">
+                 <a href="../"><h1>Camm Blog Page</h1></a>
+             </div>
+            <nav class="navbar navbar-default">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a class="icon-bar" href="../">Home</a>
+                    </li>
+                    <li>
+                        <a class="icon-bar" href="../about.html">About</a>
+                    </li>
+                    <li>
+                        <a class="icon-bar" href="../contact.html">Contact</a>
+                    </li>
+                    <li>
+                        <a class="icon-bar" href="../archive.html">Archive</a>
+                    </li>
+                </ul>
+            </nav>
+            <div id="content">
+                <h1>Building - Introducción a Aeson - ES</h1>
+
+                <div class="info">
+    Posted on March 21, 2016
+    
+</div>
+
+<h1 id="aeson-la-librería-de-la-lingua-franca">Aeson la librería de la lingua franca</h1>
+<p>JSON <a href="http://json.org/">(JavaScript Object Notation)</a> se ha convertido en el formato para intercambio de datos más utilizado en distintos tipos de aplicaciones. Y por tal motivo se ha vuelto necesario poder componer y descomponer una cadena de caracteres (no se hará hincapíe en el tema de codificación en esta publicación) que se encuentra en este formato, a partir de una representación en alguna estructura en un lenguaje de programación.</p>
+<p>JSON está conformado principalmente de dos estructuras:</p>
+<ul>
+<li><em>Un Objeto</em>: Una colección de pares (nombre:valor).</li>
+<li><em>Una lista</em>: Una colección de valores asignados a un nombre.</li>
+</ul>
+<p>Por ejemplo:</p>
+<div class="sourceCode"><pre class="sourceCode json"><code class="sourceCode json"><span class="fu">{</span>
+  <span class="dt">&quot;canciones&quot;</span> <span class="fu">:</span> <span class="ot">[</span>
+    <span class="fu">{</span>
+          <span class="dt">&quot;título&quot;</span> <span class="fu">:</span> <span class="st">&quot;Que no te haga bobo Jacobo&quot;</span>
+       <span class="fu">,</span>  <span class="dt">&quot;autor&quot;</span> <span class="fu">:</span> <span class="st">&quot;Molotov&quot;</span>
+       <span class="fu">,</span>  <span class="dt">&quot;álbum&quot;</span> <span class="fu">:</span> <span class="st">&quot;¿Dónde jugarán las niñas?&quot;</span>
+    <span class="fu">}</span><span class="ot">,</span>
+    <span class="fu">{</span>
+          <span class="dt">&quot;título&quot;</span> <span class="fu">:</span> <span class="st">&quot;Yendo a la casa de Damián&quot;</span>
+       <span class="fu">,</span>  <span class="dt">&quot;autor&quot;</span> <span class="fu">:</span> <span class="st">&quot;El Cuarteto de Nos&quot;</span>
+       <span class="fu">,</span>  <span class="dt">&quot;álbum&quot;</span> <span class="fu">:</span> <span class="st">&quot;Raro&quot;</span>
+    <span class="fu">}</span>
+  <span class="ot">]</span>
+<span class="fu">}</span></code></pre></div>
+<p>En el ejemplo se puede identificar la lista <em>canciones</em> y los <em>objetos</em> dentro de esta lista, en los cuales están los pares (nombre:valor) con los datos de los objetos de la lista, en este caso el <em>título</em>, <em>autor</em> y el <em>álbum</em> de un par de canciones de mi preferencia, en formato JSON. Una de las razones por las cuales este formato es ampliamente utilizado es por su fácilidad para ser representado en datos de algún lenguaje de programación. Y para poder intercambiar datos entre múltiples puntos. Una trama JSON es de menor tamaño que una en otro formato, por ejemplo XML <a href="https://en.wikipedia.org/wiki/XML">(Extensible Markup Language)</a>.</p>
+<div class="sourceCode"><pre class="sourceCode xml"><code class="sourceCode xml"><span class="kw">&lt;canciones&gt;</span>
+    <span class="kw">&lt;cancion&gt;</span>
+        <span class="kw">&lt;t</span><span class="er">ítulo</span><span class="kw">&gt;</span>Que no te haga bobo Jacobo<span class="kw">&lt;/t</span><span class="er">ítulo</span><span class="kw">&gt;</span>
+        <span class="kw">&lt;autor&gt;</span>Molotov<span class="kw">&lt;/autor&gt;</span>
+        <span class="er">&lt;</span>álbum&gt;¿Dónde jugarán las niñas?<span class="er">&lt;</span>/álbum&gt;
+    <span class="kw">&lt;/cancion&gt;</span>
+    <span class="kw">&lt;cancion&gt;</span>
+        <span class="kw">&lt;t</span><span class="er">ítulo</span><span class="kw">&gt;</span>Yendo a la casa de Damián<span class="kw">&lt;/t</span><span class="er">ítulo</span><span class="kw">&gt;</span>
+        <span class="kw">&lt;autor&gt;</span>El Cuarteto de Nos<span class="kw">&lt;/autor&gt;</span>
+        <span class="er">&lt;</span>álbum&gt;Raro<span class="er">&lt;</span>/álbum&gt;
+    <span class="kw">&lt;/cancion&gt;</span>
+<span class="kw">&lt;/canciones&gt;</span></code></pre></div>
+<p>Al verificar el tamaño de estos dos archivos se obtiene el siguiente resultado:</p>
+<pre class="shell"><code>camm:~$ ls -lh ./*
+-rw-r--r-- 1 camm users 305 Mar 22 22:05 ./ex.json
+-rw-r--r-- 1 camm users 349 Mar 22 22:05 ./ex.xml</code></pre>
+<p>La diferencia no es muy significativa (44KB) en este pequeño ejemplo, pero se pueden dar a la idea, si el archivo contuviera más datos.</p>
+<p>No profundizaré más en el tema del formato JSON, pero espero que lo poco explicado aquí sirva como una pequeña referencia para aquellas personas que están empezando y desconozcan el formato.</p>
+
+<div id="disqus_thread"></div>
+<script>
+/**
+ *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+ *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+ */
+/*
+   var disqus_config = function () {
+   this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+   this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+   };
+ */
+(function() {  // DON'T EDIT BELOW THIS LINE
+ var d = document, s = d.createElement('script');
+
+ s.src = '//cristhianmotochegithubio.disqus.com/embed.js';
+
+ s.setAttribute('data-timestamp', +new Date());
+ (d.head || d.body).appendChild(s);
+ })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+            </div>
+            <footer class="footer" style="width:50%">
+                <div class="container">
+                    Site proudly generated by: <a href="http://jaspervdj.be/hakyll">Hakyll</a>
+                </div>
+            </footer>
+        </div>
+    </body>
+</html>
