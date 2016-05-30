@@ -61,6 +61,24 @@
 <img src="../images/hackage-intro-welcome-message_640x480_resized.png" alt="Imagen 4. Establecer contraseña" width="400" />
 <p class="caption"><strong>Imagen 4. Establecer contraseña</strong></p>
 </div>
+<h2 id="segundo-paso---crear-tu-paquete">Segundo paso - Crear tu paquete</h2>
+<p>Para la creación de mi paquete voy a utilizar <code>stack</code>; también puedes utilizar otras herramientas, por ejemplo <a href="https://github.com/fujimura/hi">hi</a>. Y también puedes utilizar <code>cabal</code> si lo deseas; de hecho, utilizaré <code>cabal</code> para comprobar que la estructura e información de mi proyecto esté correcta.</p>
+<p>Primero, tienes que crear el nuevo paquete:</p>
+<pre class="shell"><code>$ stack new [package-name]</code></pre>
+<p>Y editamos el</p>
+<p>Y verificamos si tiene la información necesaria y si está correctamente estructurado utilizando <code>cabal</code>.</p>
+<pre class="shell"><code>$ cabal check
+No errors or warnings could be found in the package.</code></pre>
+<p><strong>NOTA:</strong> Si el comando anterior falla, no podrás subir tu paquete a Hackage, será automáticamente descartado.</p>
+<h2 id="tercer-paso---subir-tu-paquete">Tercer paso - Subir tu paquete</h2>
+<p>Para finalmente subir tu paquete a Hackage, tienes que crear una distribución del código fuente (source distribution).</p>
+<pre class="shell"><code>$ stack sdist
+Getting file list for /home/user/repos/[package-name]/
+Building sdist tarball for /home/user/repos/[package-name]/
+Checking package '[package-name]' for common mistakes
+Wrote sdist tarball to /home/user/repos/[package-name]/.stack-work/dist/x86_64-linux/Cabal-1.22.5.0/[package-name]-0.1.0.0.tar.gz</code></pre>
+<p>El comando anterior generará un archivo comprimido en <code>.stack-work/dist/x86_64-linux/Cabal-1.22.5.0/[package-name]-0.1.0.0.tar.gz</code>. Este será el archivo que deberás subir a Hackage, en el <a href="https://hackage.haskell.org/packages/candidates/upload">este enlace</a>.</p>
+<p>Espero que les haya gustado, cualquier comentario o sugerencia será bienvenido. ByE!</p>
 
 <div id="disqus_thread"></div>
 <script>
