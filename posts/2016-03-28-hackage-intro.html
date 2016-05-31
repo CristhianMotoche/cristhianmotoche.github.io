@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>Camm Blog - Building - Subir un paquete a Hackage - ES</title>
+        <title>Camm Blog - Subir un paquete a Hackage - ES</title>
         <link rel="icon" type="image/png" href="../images/devi.png">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
         <link href="css/sticky-footer-navbar.css" rel="stylesheet">
@@ -31,10 +31,10 @@
                 </ul>
             </nav>
             <div id="content">
-                <h1>Building - Subir un paquete a Hackage - ES</h1>
+                <h1>Subir un paquete a Hackage - ES</h1>
 
                 <div class="info">
-    Posted on March 21, 2016
+    Posted on May 31, 2016
     
 </div>
 
@@ -71,14 +71,14 @@
 No errors or warnings could be found in the package.</code></pre>
 <p><strong>NOTA:</strong> Si el comando anterior falla, no podrás subir tu paquete a Hackage, será automáticamente descartado.</p>
 <h2 id="tercer-paso---subir-tu-paquete">Tercer paso - Subir tu paquete</h2>
-<p>Para finalmente subir tu paquete a Hackage, tienes que crear una distribución del código fuente (source distribution).</p>
+<p>Finalmente, para subir tu paquete a Hackage, tienes que crear una distribución del código fuente (source distribution). Lo puedes hacer con <code>stack</code> o con <code>cabal</code>.</p>
 <pre class="shell"><code>$ stack sdist
 Getting file list for /home/user/repos/[package-name]/
 Building sdist tarball for /home/user/repos/[package-name]/
 Checking package '[package-name]' for common mistakes
 Wrote sdist tarball to /home/user/repos/[package-name]/.stack-work/dist/x86_64-linux/Cabal-1.22.5.0/[package-name]-0.1.0.0.tar.gz</code></pre>
-<p>El comando anterior generará un archivo comprimido en <code>.stack-work/dist/x86_64-linux/Cabal-1.22.5.0/[package-name]-0.1.0.0.tar.gz</code>. Este será el archivo que deberás subir a Hackage, en el <a href="https://hackage.haskell.org/packages/candidates/upload">este enlace</a>.</p>
-<p>Espero que les haya gustado, cualquier comentario o sugerencia será bienvenido. ByE!</p>
+<p>El comando anterior generará el rchivo comprimido: <code>.stack-work/dist/x86_64-linux/Cabal-1.22.5.0/[package-name]-0.1.0.0.tar.gz</code>. Y deberás subir este archivo a Hackage, en el <a href="https://hackage.haskell.org/packages/candidates/upload">este enlace</a>. Cuando intentes subir el paquete te pedirá que ingreses tus credenciales con las cuales hayas creado tu cuenta en Hackage. Las ingresas y ¡está listo! Podras ver tu paquete en la lista de <a href="https://hackage.haskell.org/packages/candidates/">paquetes candidatos</a>.</p>
+<p>Espero que les haya gustado, cualquier comentario, sugerencia o preguta será bienvenido. ByE!</p>
 
 <div id="disqus_thread"></div>
 <script>
