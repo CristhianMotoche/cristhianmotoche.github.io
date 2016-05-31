@@ -1,6 +1,6 @@
 ---
-title: Building - Subir un paquete a Hackage - ES
-date: 2016-03-21 20:57:22
+title: Subir un paquete a Hackage - ES
+date: 2016-05-31 18:34:55
 tags: hackage, haskell
 metadescription: En este blog explicaré cómo puedes subir un paquete de un proyecto de Haskell a Hackage.
 ---
@@ -49,8 +49,8 @@ $ stack new [package-name]
 
 Y editamos el
 
-Y verificamos si tiene la información necesaria y si está correctamente estructurado
-utilizando `cabal`.
+Y verificamos si tiene la información necesaria y si está correctamente
+estructurado utilizando `cabal`.
 
 ```shell
 $ cabal check
@@ -61,8 +61,8 @@ automáticamente descartado.
 
 ## Tercer paso - Subir tu paquete
 
-Para finalmente subir tu paquete a Hackage, tienes que crear una distribución del
-código fuente (source distribution).
+Finalmente, para subir tu paquete a Hackage, tienes que crear una distribución del
+código fuente (source distribution). Lo puedes hacer con `stack` o con `cabal`.
 
 ```shell
 $ stack sdist
@@ -72,15 +72,21 @@ Checking package '[package-name]' for common mistakes
 Wrote sdist tarball to /home/user/repos/[package-name]/.stack-work/dist/x86_64-linux/Cabal-1.22.5.0/[package-name]-0.1.0.0.tar.gz
 ```
 
-El comando anterior generará un archivo comprimido en `.stack-work/dist/x86_64-linux/Cabal-1.22.5.0/[package-name]-0.1.0.0.tar.gz`.
-Este será el archivo que deberás subir a Hackage, en el [este enlace][hackage-upload].
+El comando anterior generará el rchivo comprimido:
+`.stack-work/dist/x86_64-linux/Cabal-1.22.5.0/[package-name]-0.1.0.0.tar.gz`.
+Y deberás subir este archivo a Hackage, en el [este enlace][hackage-upload].
+Cuando intentes subir el paquete te pedirá que ingreses tus credenciales con las
+cuales hayas creado tu cuenta en Hackage. Las ingresas y ¡está listo! Podras ver
+tu paquete en la lista de [paquetes candidatos][hackage-candidate-packages].
 
-Espero que les haya gustado, cualquier comentario o sugerencia será bienvenido.
+Espero que les haya gustado, cualquier comentario, sugerencia o preguta
+será bienvenido.
 ByE!
 
 [hackage]: http://hackage.haskell.org/
 [hackage-register]: http://hackage.haskell.org/users/register-request
 [hackage-upload]: https://hackage.haskell.org/packages/candidates/upload
+[hackage-candidate-packages]: https://hackage.haskell.org/packages/candidates/
 
 [1]: /images/hackage-intro-img-register_640x480_resized.png {width=600px}
 [2]: /images/hackage-intro-email-verificacion.png {width=400px}
