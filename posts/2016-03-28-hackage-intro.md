@@ -84,8 +84,8 @@ Cuando intentes subir el paquete te pedirá que ingreses tus credenciales con la
 cuales hayas creado tu cuenta en Hackage. Las ingresas y ¡está listo! Podras ver
 tu paquete en la lista de [paquetes candidatos][hackage-candidate-packages].
 
-Espero que les haya gustado, cualquier comentario, sugerencia o preguta la puedes
-hacer en los comentarios de Disqus.
+Espero que te haya gustado, cualquier comentario, sugerencia o preguta la puedes
+hacer en los comentarios de Disqus. Te aseguro que contestaré tan rápido como pueda. ;)
 ByE!
 
 [hackage]: http://hackage.haskell.org/
