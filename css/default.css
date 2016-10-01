@@ -1,3 +1,9 @@
+img {
+  border: 2px;
+  border-color: black;
+  border-style: solid;
+}
+
 #container {
   padding-right: 10%;
   padding-left: 10%;
@@ -10,15 +16,21 @@
   text-align: center;
 }
 
-#logo_img {
-  border: 2px;
-  border-color: black;
-  border-style: solid;
-}
-
 .footer {
   background-color: #eee;
-  border: 2px;
-  border-color: black;
-  border-style: dashed;
+  text-align: center;
 }
+
+.post-list {
+  width: 50%;
+}
+
+@media screen and (max-width: 888px) {
+    #logo_img {
+      display: none;
+    }
+    .post-list {
+      width: 100%;
+    }
+}
+

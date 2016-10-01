@@ -1,8 +1,8 @@
 ---
-title: Building - Ansible para configurar mi propia computadora - ES
+title: WAIT-FOR - Ansible para configurar mi propia computadora - ES
 date: 2016-03-23 20:57:22
-tags: ansible
-metadescription: Cómo utilizar Ansible para configurar automáticamente mi computador.
+tags: ansible, es, wait-for
+description: Cómo utilizar Ansible para configurar automáticamente mi computador.
 ---
 
 # Ansible: la herramienta para configuración automática

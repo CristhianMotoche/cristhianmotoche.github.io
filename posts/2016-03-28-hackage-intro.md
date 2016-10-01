@@ -1,8 +1,8 @@
 ---
-title: Subir un paquete a Hackage - ES
+title: Subir un paquete a Hackage
 date: 2016-05-31 18:34:55
-tags: hackage, haskell
-metadescription: En este blog explicaré cómo puedes subir un paquete de un proyecto de Haskell a Hackage.
+tags: hackage, haskell, es
+description: En este blog explicaré cómo puedes subir un paquete de un proyecto de Haskell a Hackage.
 ---
 
 ## ¿Qué es Hackage?
