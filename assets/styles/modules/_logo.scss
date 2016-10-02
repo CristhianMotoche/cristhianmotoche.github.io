@@ -1,0 +1,14 @@
+.logo {
+  &__title {
+    text-align: center;
+    text-transform: uppercase;
+    font-style: italic;
+  }
+  &__link {
+    color: #337AB7;
+    text-decoration: none;
+  }
+  &__link:link, &__link:active, &__link:visited {
+    text-decoration: none;
+  }
+}

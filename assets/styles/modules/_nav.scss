@@ -1,0 +1,26 @@
+.navbar {
+  background-color: #F8F8F8;
+
+  margin-left: 5%;
+  margin-right: 5%;
+  padding: 1%;
+  border: 2px solid #337AB7;
+  border-radius: 25px;
+
+  font-style: italic;
+}
+
+.nav-list {
+  display: flex;
+  list-style-type: none;
+  &__item {
+    margin-right: 5%;
+    text-size: 5em;
+  }
+  &__link {
+    text-decoration: none;
+  }
+  &__link:hover {
+    color: #0fc4c4;
+  }
+}

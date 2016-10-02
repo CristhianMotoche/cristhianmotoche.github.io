@@ -1,0 +1,21 @@
+@import 'modules/logo';
+@import 'modules/body';
+@import 'modules/nav';
+@import 'modules/footer';
+@import 'modules/content';
+@import 'modules/code';
+
+img {
+  text-align: center;
+  border: 1px solid black;
+}
+
+@media screen and (max-width: 888px) {
+    #logo_img {
+      display: none;
+    }
+    .post-list {
+      width: 100%;
+    }
+}
+

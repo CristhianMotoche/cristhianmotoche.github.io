@@ -1,0 +1,9 @@
+.body {
+  background-color: #F3F3F3;
+  font-family: "Times New Roman", Times, monospace;
+  width: 100%;
+  &__container {
+    margin-left: 10%;
+    margin-right: 10%;
+  }
+}

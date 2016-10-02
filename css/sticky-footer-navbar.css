@@ -37,3 +37,8 @@ body > .container {
 code {
   font-size: 80%;
 }
+
+.figure {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}

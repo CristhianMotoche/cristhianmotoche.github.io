@@ -1,0 +1,67 @@
+// Variables
+$font-family-monospace: Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !default;
+
+$code-font-size:              90% !default;
+$code-padding-x:              .4rem !default;
+$code-padding-y:              .2rem !default;
+$code-color:                  #bd4147 !default;
+$code-bg:                     #f7f7f9 !default;
+
+$kbd-color:                   #fff !default;
+$kbd-bg:                      #333 !default;
+
+$pre-bg:                      #f7f7f9 !default;
+$pre-color:                   #373a3c !default;
+$pre-border-color:            #ccc !default;
+$pre-scrollable-max-height: 340px !default;
+
+// Inline code
+code {
+  padding: $code-padding-y $code-padding-x;
+  font-size: $code-font-size;
+  color: $code-color;
+  background-color: $code-bg;
+  border-radius: .25rem;
+}
+
+// User input typically entered via keyboard
+kbd {
+  padding: $code-padding-y $code-padding-x;
+  font-size: $code-font-size;
+  color: $kbd-color;
+  background-color: $kbd-bg;
+  border-radius: .2rem;
+
+  kbd {
+    padding: 0;
+    font-size: 100%;
+    font-weight: bold;
+    box-shadow: none;
+  }
+}
+
+// Blocks of code
+pre {
+  display: block;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: $code-font-size;
+  color: $pre-color;
+  border-left: .3em solid hotpink;
+  padding-left: .3em;
+
+  // Account for some code outputs that place code tags in pre tags
+  code {
+    padding: 0;
+    font-size: inherit;
+    color: inherit;
+    background-color: transparent;
+    border-radius: 0;
+  }
+}
+
+// Enable scrollable blocks of code
+.pre-scrollable {
+  max-height: $pre-scrollable-max-height;
+  overflow-y: scroll;
+}
