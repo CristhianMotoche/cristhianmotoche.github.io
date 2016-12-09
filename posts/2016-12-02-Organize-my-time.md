@@ -1,5 +1,5 @@
 ---
-title: [Building] How to organize my tasks for being productive
+title: WAIT IT IS NOT FINISHED - How to organize my tasks for being productive
 date: 2016-12-02 14:06:22
 tags: en, wait
 description: This is the way I organize my tasks to feel more productive.
