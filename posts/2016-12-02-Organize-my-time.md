@@ -36,12 +36,34 @@ person, and every role I have in my life.
 Ok, now I need that you specify your goals. I'll explain this using every example above.
 - If you were a musician and you want to play in a concert to many people:
   - Write a album
+  - ...
 - If you were a soccer player and you want to be the best in your team:
   - Improve your statistics
+  - ...
 - If you were a programmer and you want yo be better at a new programming language:
   - Start a new project in that programming language
+  - ...
 - If you were in a relationship and you want to enjoy a really good time with your partner:
   - Plan a trip to some romantic place
+  - ...
+
+Once you have more specific goals map them into the months of the year:
+
+| January | Objective 1 | Objective 2 |
+| Februay | Objective 1 | Objective 8 |
+| March | Objective 1 | Objective 4 |
+| ... | ... | ... |
+| December | Objective (n-1) | Objective n |
+
+Some goals will need more time than others so you could define to do one or more
+of them per month. Perhaps, you will define one goal for two or more months. It
+depends on you. The purpouse of this is that you can concentrate your body and mind in
+those specific goals.
+
+The next step is to split that goal into tasks that you can complete by week.
+
+**Suggestion:** I don't set more than two objectives to do per month, because
+there are some tasks that appear in the week and I need to solve them too,
 
 ## Third step: Specify your deliverables for this *week*
 ## Fourth step: What are you going to do *today*?
