@@ -1,7 +1,7 @@
 ---
-title: WAIT IT IS NOT FINISHED - How to organize my tasks for being productive
+title: How to organize my tasks for being productive
 date: 2016-12-02 14:06:22
-tags: en, wait
+tags: en, organization
 description: This is the way I organize my tasks to feel more productive.
 ---
 
@@ -80,8 +80,8 @@ Everything related to your month goals.
 
 | Musician | Soccer Player | Programmer | Engaged |
 | ------- | ----------- | ----------- | ----------- |
-| Write a new song | Make 2 goals | Define your DB scheme | Save money every day ($1) |
-| Define your instruments | Make 5 soccer assistance | Create the login | Search for a romantic place to visit |
+| Write a new song | Train aim | Define your DB scheme | Save money every day ($1) |
+| Define your instruments | Train assistance | Create the login | Search for a romantic place to visit |
 | ... | ... | ... | ... |
 
 **Suggestion:** You might have noticed that these are really specific tasks and
@@ -90,7 +90,7 @@ goal in that week. However, remember that there are other kind of tasks, so try 
 define a coherent list. Saving time for the other tasks too.
 
 ## Fourth step: What are you going to do *today*?
-For my there are two types of tasks:
+I think there are two types of tasks:
 
 - Tasks related to your goals. I call them: Goal tasks.
 - Tasks that unexpectedly appear in the week. I call them: Emergency tasks, because
@@ -102,6 +102,26 @@ In any case what you need is a TODO board:
 | ------- | ----------- | ----------- |
 | All your tasks to do this day | All the tasks that you are doing | All the tasks that you have done |
 
+You can put goal or emergency tasks in the TODO board.
+
 ## Fifth step: What task are you going to do in this *hours*?
+Finally, you have to set the tasks in your TODO column into your agenda.
+
+| Hour | Task |
+| ------- | ----------- |
+| 7 | Taks #1 |
+| 8 | Taks #1 |
+| 9 | Taks #2 |
+| ... | ... |
+| 21 | Taks #n |
+
+In another blog post I'll show you how I define which tasks should I do first,
+just wait a little bit for it.
 
 # Conclusion
+This workflow has worked for me. It's a good way to go from very general goals
+to specific activities.
+
+If you have any comment, suggestion, or anything. Please, feel free to write it down.
+I'll be really happy with all your feed back. Thanks a lot! ByE!
+
