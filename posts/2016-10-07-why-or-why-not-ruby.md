@@ -1,6 +1,6 @@
 ---
 title: Ruby. Why? or Why not?
-date: 2016-29-09 22:22:00
+date: 2016-09-29 22:22:00
 tags: ruby, es, en, whys
 description: A list of the good and bad side of Ruby from my perspecitve.
 ---
