@@ -30,25 +30,25 @@ complete it. And I used the fibbonaci series because is going to affect more
 the total weight of the task.
 
 |Urgency Level|	When do I have to complete it?|
-|---	|---|
-|1	|More than 1 week|
-|2	|One week|
-|3	|Five or six days|
-|5	|Three or four days|
-|8	|One or two days|
-|13|	Right Now!|
+|--|---|
+|1|More than 1 week|
+|2|One week|
+|3|Five or six days|
+|5|Three or four days|
+|8|One or two days|
+|13|Right Now!|
 
 ## Time required
 I also consider this parameter an influence for the total weight.
 
 |Time required level| How much time do I need to complete it?|
-|---	|---|
-|1	|Less than 1 hour|
-|2	|Between 2 and 1 hour|
-|3	|Between 3 and 7 hour|
-|5	|Between 8 and 11 hour|
-|8	|Between 12 and 24 hour|
-|13 |More than 24 hours!|
+|--|---|
+|1|Less than 1 hour|
+|2|Between 2 and 1 hour|
+|3|Between 3 and 7 hour|
+|5|Between 8 and 11 hour|
+|8|Between 12 and 24 hour|
+|13|More than 24 hours!|
 
 # How important is every one of them
 Now, you should define a percentage of weight to every parameter:
