@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="description" content="A blog page for people who is interested in programming.">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>CAMM Blog</title>
+    <link rel="icon" type="image/png" href="../images/devi.png">
+    <link href="../css/default.css" rel="stylesheet">
+    <meta name="google-site-verification" content="ZE7UdJw8EgIGYT1wlPQ1IDRaqOa9IseKmfw4ufHxEAk" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body class="body">
+    <div class="body__container">
+      <div class="logo">
+        <h1 class="logo__title">
+          <a class="logo__link" href="../">Camm Blog Page</a>
+        </h1>
+      </div>
+      <nav class="navbar">
+        <ul class="nav-list">
+          <li class="nav-list__item">
+            <a class="nav-list__link" href="../">Home</a>
+          </li>
+          <li class="nav-list__item">
+            <a class="nav-list__link" href="../contact.html">About</a>
+          </li>
+          <li class="nav-list__item">
+            <a class="nav-list__link" href="../archive.html">Archive</a>
+          </li>
+        </ul>
+      </nav>
+      <div class="content">
+        <h1 class="content__title">Which task should I choose?</h1>
+        <div class="content_body">
+          <link href="../css/hk-pyg.css" rel="stylesheet">
+<link href="../css/tables.css" rel="stylesheet">
+<div class="info">
+    Posted on December 23, 2016
+    
+</div>
+<div class="info">
+    
+    Tags: <a href="../tags/en.html">en</a>, <a href="../tags/organization.html">organization</a>
+    
+</div>
+
+<h1 id="introduction">Introduction</h1>
+<p>When I defined the tasks that would be necessary to accomplish my goals, I didn’t knew which tasks should be done first. After reading a few blog posts I defined the way to do it. If you want to know how, keep reading.</p>
+<h1 id="choose-the-right-parameters">Choose the right parameters</h1>
+<p>There are three parameters I chose: <strong>importance</strong>, <strong>urgency</strong>, and <strong>time required</strong>. All these parameters give me a value that is used to calculate the total weight of the task.</p>
+<h2 id="importance">Importance</h2>
+<p>I defined a number line for this parameter. If the task is not very important, for example something related to a personal project, chores, etc. It should be located between 1 and 5. Otherwise, if it is really important, like: homework, an appointment, etc. Then you’ll have to assign a number between 6 and 10. This is the way I do it. However, it depends of you which task has more importance.</p>
+<div class="figure">
+<img src="../images/importance.png" alt="Imagen 1. Importance" class="img-blog" />
+<p class="caption"><strong>Imagen 1. Importance</strong></p>
+</div>
+<h2 id="urgency">Urgency</h2>
+<p>For this parameter, I defined the urgency according to the left time I have to complete it. And I used the fibbonaci series because is going to affect more the total weight of the task.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Urgency Level</th>
+<th>When do I have to complete it?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1 |More</td>
+<td>More than 1 week</td>
+</tr>
+<tr class="even">
+<td>2 |One</td>
+<td>One week</td>
+</tr>
+<tr class="odd">
+<td>3 |Five</td>
+<td>Five or six days</td>
+</tr>
+<tr class="even">
+<td>5 |Thre</td>
+<td>Three or four days</td>
+</tr>
+<tr class="odd">
+<td>8 |One</td>
+<td>One or two days</td>
+</tr>
+<tr class="even">
+<td>13</td>
+<td>Right Now!|</td>
+</tr>
+</tbody>
+</table>
+<h2 id="time-required">Time required</h2>
+<p>I also consider this parameter an influence for the total weight.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Time required level</th>
+<th>How much time do I need to complete it?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1 |Less</td>
+<td>Less than 1 hour</td>
+</tr>
+<tr class="even">
+<td>2 |Betw</td>
+<td>Between 2 and 1 hour</td>
+</tr>
+<tr class="odd">
+<td>3 |Betw</td>
+<td>Between 3 and 7 hour</td>
+</tr>
+<tr class="even">
+<td>5 |Betw</td>
+<td>Between 8 and 11 hour</td>
+</tr>
+<tr class="odd">
+<td>8 |Betw</td>
+<td>Between 12 and 24 hour</td>
+</tr>
+<tr class="even">
+<td>13</td>
+<td>More than 24 hours!</td>
+</tr>
+</tbody>
+</table>
+<h1 id="how-important-is-every-one-of-them">How important is every one of them</h1>
+<p>Now, you should define a percentage of weight to every parameter:</p>
+<ul>
+<li>Urgency: 50%</li>
+<li>Importane: 30%</li>
+<li>Time Required: 20%</li>
+</ul>
+<p>The percentage above is for my decision. You can define your own.</p>
+<h1 id="get-the-total">Get the total</h1>
+<p>Now, simple calculate the following formula:</p>
+<pre><code>Weight = Urgency * 50% + Importance * 30% + Time Required * 20%</code></pre>
+<p>This value will help you to choose the next tasks. For instance, you have two tasks:</p>
+<pre><code>Task #1:
+U = 6
+TR = 4
+I = 5
+W = U*50% + TR*30% + I*20% = 4</code></pre>
+<pre><code>Task #2:
+U = 8
+TR = 1
+I = 6
+W = U*50% + TR*30% + I*20% = 5</code></pre>
+<p>According to this result the task #2 should be realized before task #1. However, what would happen if two tasks have the same weight? The you can trust in the priority of the parameters. For me, urgency and time required are more important. For instance, between the following two tasks:</p>
+<pre><code>Task #1:
+U = 6
+TR = 6
+I = 5
+W = U*50% + TR*30% + I*20% = 5</code></pre>
+<pre><code>Task #2:
+U = 8
+TR = 1
+I = 6
+W = U*50% + TR*30% + I*20% = 5</code></pre>
+<p>I’ll choose the task #2, because it has a bigger urgency. If both tasks had the same urgency, then I’ll look at the Timre Required, and so on. If all the parameter have the same value, then you can choose any task.</p>
+<h1 id="conclusion">Conclusion</h1>
+<p>This is a quantitative way to evalute how the priority of a task. I trust a lot in numbers and this method has been really good for me. I hope it works for you too. If you have any comment, suggestion, and so on and so forth. Feel free to do it! :D ByE!</p>
+
+<div id="disqus_thread"></div>
+<script>
+/**
+ *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+ *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+ */
+/*
+   var disqus_config = function () {
+   this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+   this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+   };
+ */
+(function() {  // DON'T EDIT BELOW THIS LINE
+ var d = document, s = d.createElement('script');
+
+ s.src = '//cristhianmotochegithubio.disqus.com/embed.js';
+
+ s.setAttribute('data-timestamp', +new Date());
+ (d.head || d.body).appendChild(s);
+ })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+        </div>
+      </div>
+      <footer class="footer">
+        <p class="footer__hakyll">Site proudly generated by: <a href="http://jaspervdj.be/hakyll">Hakyll</a></p>
+        <a class="footer__license" rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">CAMM Blog</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Cristhian Alberto Motoche Macas</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
+      </footer>
+    </div>
+    <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-86039843-1', 'auto');
+    ga('send', 'pageview');
+    </script>
+  </body>
+</html>
