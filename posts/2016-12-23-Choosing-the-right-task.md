@@ -115,5 +115,5 @@ in numbers and this method has been really good for me. I hope it works for you 
 If you have any comment, suggestion, and so on and so forth. Feel free to do it! :D
 ByE!
 
-[1]: /images/importance.png {class=img-blog}
+[1]: /images/importance.png {width=600px class=img-blog}
 
