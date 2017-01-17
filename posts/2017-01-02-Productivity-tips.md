@@ -24,6 +24,15 @@ And if you work for 208 min. you would have rest 64 min. If you do that in your 
 you might get a memo, well I think so. You could try it, though. Some experts says
 that it is the optimal time to be really productive.
 
+- **Pomodoro**. Pomodoro is a method really similar to **52/17**. However, the time
+is different: 25 minutes to work and 5 min to rest. I've used this one, and I think
+is really good. However, the only problem that I have with this method is that
+sometimes I forgot to reload a sesion. That is terrible, because I end up doing
+resting more than 5 minutes. I'd say that this is great technique, but you need
+to be really self-disciplined.
+
 ## Tools:
 - **52/17**. You can use any timer. For example: [egg timer](http://e.ggtimer.com/).
+- **Pomodoro**. You can use any timer. For example: [egg timer](http://e.ggtimer.com/) or Goodtime
+for your phone.
 
