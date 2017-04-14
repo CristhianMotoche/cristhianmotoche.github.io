@@ -19,7 +19,21 @@ I dislike the current state of my Blog Post Web Site for the following reasons:
 
 ![**Imagen 1. Current Website**][current-site]
 
-For these reasons I'm going to refactor it. I'll be
+For these reasons I'm going to refactor it. I'll try to get the best quality of
+it.
+
+That is the first question. What quality means? It certanly has a very general
+meaning. Accordingly, to the [ISO 9000][quality], quality is:
+
+
+> Degree to which a set of inherent characteristics fulfils requirement.
+
+I've already listed my requirements, so now the question is which characteristics
+will fulfils them? First, I'll let you know that the World Wide Web Consorcium (W3C)
+has a page with the [specifications of quality][https://www.w3.org/QA/2002/04/Web-Quality]
+for a Web site. And it provides some tools that I'll talk a little bit latter.
+However, the W3C has some specifications that don't fulfil all my requirements.
+Like, favicon standars, image displaying, fonts, and so on.
 
 # Tools to assess my blog post web site
 Currently, I'm only using [Website Grader][website-grader]
@@ -27,5 +41,6 @@ Currently, I'm only using [Website Grader][website-grader]
 
 <!-- Sites -->
 [website-grader]: https://website.grader.com/
+[quality]: https://oqrmmodel.wordpress.com/2013/02/14/iso-9000s-definition-of-quality/
 <!-- Images -->
 [current-site]: /images/Current-CAMM-Blog.png
