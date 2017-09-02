@@ -93,7 +93,7 @@ ByE!
 [hackage-upload]: https://hackage.haskell.org/packages/candidates/upload
 [hackage-candidate-packages]: https://hackage.haskell.org/packages/candidates/
 
-[1]: /images/hackage-intro-img-register_640x480_resized.png {width=600px class=img-blog}
-[2]: /images/hackage-intro-email-verificacion.png {width=400px class=img-blog}
-[3]: /images/hackage-intro-password_640x480_resized.png {width=400px class=img-blog}
-[4]: /images/hackage-intro-welcome-message_640x480_resized.png {width=400px class=img-blog}
+[1]: /images/hackage-intro-img-register_640x480_resized.png
+[2]: /images/hackage-intro-email-verificacion.png
+[3]: /images/hackage-intro-password_640x480_resized.png
+[4]: /images/hackage-intro-welcome-message_640x480_resized.png
