@@ -52,9 +52,14 @@
 <p class="caption"><strong>Imagen 1. Neo Aprende Haskell</strong></p>
 </div>
 <h1 id="requisitos">Requisitos:</h1>
-<p>Para este blog post utilicé lo siguiente: - <a href="https://docs.haskellstack.org/en/stable/README/">stack</a> - El <a href="https://www.stackage.org/lts-8.2">lts-8.2</a> - Una versión de GHC instalada con stack (<code>stack setup</code>)</p>
+<p>Para este blog post utilicé lo siguiente:</p>
+<ul>
+<li><a href="https://docs.haskellstack.org/en/stable/README/">stack</a></li>
+<li>Stack resolver: <a href="https://www.stackage.org/lts-9.2">lts-9.2</a></li>
+<li>Una versión de GHC instalada con stack (<code>stack setup</code>)</li>
+</ul>
 <h1 id="ghci">GHCi</h1>
-<p>GHCi (Glasgow Haskell Compiler Interactive) es el interprete interactivo o [*REPL]*(https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop) en el cual se puede leer (Read) expresiones, evaluarlas (Eval), imprimir un resultado ante el usuario (Print) y repetir este proceso (Loop). En este blog post hablaré sobre las funciones básicas que se pueden realizar con GHCi.</p>
+<p>GHCi (Glasgow Haskell Compiler Interactive) es el interprete interactivo o <a href="https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop">REPL</a> en el cual se pueden leer (Read) expresiones, evaluarlas (Eval), imprimir el resultado en pantalla (Print) y repetir estos pasos nuevamente (Loop). En este blog post revisaré algunas funciones básicas que se pueden realizar con GHCi.</p>
 <h1 id="iniciar-ghci">Iniciar GHCi</h1>
 <p>Simplemente, desde una terminar en la cual tengas instalado <code>stack</code> ejecuta <code>stack ghci</code></p>
 <pre class="shell"><code>$ stack ghci
@@ -81,6 +86,8 @@ Prelude&gt;</code></pre>
    ...
 
 Prelude&gt;</code></pre>
+<p>Estamos utilizando <a href="https://docs.haskellstack.org/en/stable/ghci/">stack ghci</a> que carga los módulos de librerías y ejecutables del proyecto actual de Haskell en el cual te encuentres. Además podemos añadir algunos banderas para extender los componentes que se cargan, por ejemplo, <code>--test</code>, y <code>--bench</code>. Y otros flags de los cuales haré pequeños blog posts tipo píldora en algún otro momento.</p>
+<p>Volviendo a GHCi,</p>
 
 <div id="disqus_thread"></div>
 <script>
