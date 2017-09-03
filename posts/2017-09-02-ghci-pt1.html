@@ -45,13 +45,42 @@
     
 </div>
 
-<h1 id="nota">Nota:</h1>
+<h1 id="nota-inicial">Nota inicial:</h1>
 <p>Esta es una serie de tutoriales dedicados a explorar el interprete de <a href="https://www.haskell.org/ghc/">Glasgow Haskell Compiler o GHC</a>. Bueno, ¿y por qué no empezar con algo básico de Haskell? Principalmente, porque ya conozco lo básico del lenguaje y porque estoy seguro que pueden encontrar esa información fácilmente buscándola en google. Por ejemplo, <a href="http://aprendehaskell.es/">aprende haskell por el bien de todos</a>, puedes revisar los blog posts de <a href="http://sillybytes.net/2016/06/aprende-haskell-rapido-y-dificil_29.html">Silly Bytes</a>, y también puedes encontrar varios tutoriales en <a href="https://www.youtube.com/results?search_query=introduccion+a+haskell">YouTube</a>. Y eso solo en Español, en Inglés puedes miles de recursos. Si deseas aprender, ¿qué esperas? ¿qué inventen algo como en Matrix?</p>
 <div class="figure">
 <img src="../images/ghci-pt1/neo-ya-se-haskell.jpg" alt="Imagen 1. Neo Aprende Haskell" />
 <p class="caption"><strong>Imagen 1. Neo Aprende Haskell</strong></p>
 </div>
+<h1 id="requisitos">Requisitos:</h1>
+<p>Para este blog post utilicé lo siguiente: - <a href="https://docs.haskellstack.org/en/stable/README/">stack</a> - El <a href="https://www.stackage.org/lts-8.2">lts-8.2</a> - Una versión de GHC instalada con stack (<code>stack setup</code>)</p>
 <h1 id="ghci">GHCi</h1>
+<p>GHCi (Glasgow Haskell Compiler Interactive) es el interprete interactivo o [*REPL]*(https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop) en el cual se puede leer (Read) expresiones, evaluarlas (Eval), imprimir un resultado ante el usuario (Print) y repetir este proceso (Loop). En este blog post hablaré sobre las funciones básicas que se pueden realizar con GHCi.</p>
+<h1 id="iniciar-ghci">Iniciar GHCi</h1>
+<p>Simplemente, desde una terminar en la cual tengas instalado <code>stack</code> ejecuta <code>stack ghci</code></p>
+<pre class="shell"><code>$ stack ghci
+Configuring GHCi with the following packages:
+GHCi, version 8.0.2: http://www.haskell.org/ghc/  :? for help
+Loaded GHCi configuration from /tmp/ghci6756/ghci-script
+Prelude&gt;</code></pre>
+<p>Y para comenzar, solicitemos algo de ayuda, ejecutando la siguiente sentencia:</p>
+<pre class="shell"><code>Prelude&gt; :?
+ Commands available from the prompt:
+
+   &lt;statement&gt;                 evaluate/run &lt;statement&gt;
+   :                           repeat last command
+   :{\n ..lines.. \n:}\n       multiline command
+   :add [*]&lt;module&gt; ...        add module(s) to the current target set
+   :browse[!] [[*]&lt;mod&gt;]       display the names defined by module &lt;mod&gt;
+                               (!: more details; *: all top-level names)
+   :cd &lt;dir&gt;                   change directory to &lt;dir&gt;
+   :cmd &lt;expr&gt;                 run the commands returned by &lt;expr&gt;::IO String
+   ...
+
+   UNA GRAN DESCRIPCIÓN DESPUÉS...
+
+   ...
+
+Prelude&gt;</code></pre>
 
 <div id="disqus_thread"></div>
 <script>
