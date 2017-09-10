@@ -45,23 +45,23 @@
     
 </div>
 
-<h1 id="nota-inicial">Nota inicial:</h1>
-<p>Esta es una serie de tutoriales dedicados a explorar el interprete de <a href="https://www.haskell.org/ghc/">Glasgow Haskell Compiler o GHC</a>. Bueno, ¿y por qué no empezar con algo básico de Haskell? Principalmente, porque ya conozco lo básico del lenguaje y porque estoy seguro que pueden encontrar esa información fácilmente buscándola en google. Por ejemplo, <a href="http://aprendehaskell.es/">aprende haskell por el bien de todos</a>, puedes revisar los blog posts de <a href="http://sillybytes.net/2016/06/aprende-haskell-rapido-y-dificil_29.html">Silly Bytes</a>, y también puedes encontrar varios tutoriales en <a href="https://www.youtube.com/results?search_query=introduccion+a+haskell">YouTube</a>. Y eso solo en Español, en Inglés puedes miles de recursos. Si deseas aprender, ¿qué esperas? ¿qué inventen algo como en Matrix?</p>
+<h2 id="nota-inicial">Nota inicial:</h2>
+<p>Esta es una serie de tutoriales dedicados a explorar el interprete de <a href="https://www.haskell.org/ghc/">Glasgow Haskell Compiler o GHC</a>. Bueno, ¿y por qué no empezar con algo básico de Haskell? Principalmente, porque ya conozco lo básico del lenguaje y porque estoy seguro que pueden encontrar esa información fácilmente buscándola en google. Por ejemplo, <a href="http://aprendehaskell.es/">aprende haskell por el bien de todos</a>, puedes revisar los blog posts de <a href="http://sillybytes.net/2016/06/aprende-haskell-rapido-y-dificil_29.html">Silly Bytes</a>, y también puedes encontrar varios tutoriales en <a href="https://www.youtube.com/results?search_query=introduccion+a+haskell">YouTube</a>. Y eso solo en Español, en Inglés encontrarás miles de recursos. Si deseas aprender, ¿qué esperas? ¿qué inventen algo como en Matrix? Tal vez tengas que esperar un poco.</p>
 <div class="figure">
 <img src="../images/ghci-pt1/neo-ya-se-haskell.jpg" alt="Imagen 1. Neo Aprende Haskell" />
 <p class="caption"><strong>Imagen 1. Neo Aprende Haskell</strong></p>
 </div>
-<h1 id="requisitos">Requisitos:</h1>
+<h1 id="requisitos">1. Requisitos:</h1>
 <p>Para este blog post utilicé lo siguiente:</p>
 <ul>
 <li><a href="https://docs.haskellstack.org/en/stable/README/">stack</a></li>
 <li>Stack resolver: <a href="https://www.stackage.org/lts-9.2">lts-9.2</a></li>
 <li>Una versión de GHC instalada con stack (<code>stack setup</code>)</li>
 </ul>
-<h1 id="ghci">GHCi</h1>
+<h1 id="ghci">2. GHCi</h1>
 <p>GHCi (Glasgow Haskell Compiler Interactive) es el interprete interactivo o <a href="https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop">REPL</a> en el cual se pueden leer (Read) expresiones, evaluarlas (Eval), imprimir el resultado en pantalla (Print) y repetir estos pasos nuevamente (Loop). En este blog post revisaré algunas funciones básicas que se pueden realizar con GHCi.</p>
-<h1 id="iniciar-ghci">Iniciar GHCi</h1>
-<p>Simplemente, desde una terminar en la cual tengas instalado <code>stack</code> ejecuta <code>stack ghci</code></p>
+<h1 id="iniciar-ghci">3. Iniciar GHCi</h1>
+<p>Simplemente, desde una terminar en la cual tengas instalado <code>stack</code> ejecuta <code>stack ghci</code>:</p>
 <pre class="shell"><code>$ stack ghci
 Configuring GHCi with the following packages:
 GHCi, version 8.0.2: http://www.haskell.org/ghc/  :? for help
@@ -81,13 +81,161 @@ Prelude&gt;</code></pre>
    :cmd &lt;expr&gt;                 run the commands returned by &lt;expr&gt;::IO String
    ...
 
-   UNA GRAN DESCRIPCIÓN DESPUÉS...
+   UNA LARGA DESCRIPCIÓN DESPUÉS...
 
    ...
 
 Prelude&gt;</code></pre>
-<p>Estamos utilizando <a href="https://docs.haskellstack.org/en/stable/ghci/">stack ghci</a> que carga los módulos de librerías y ejecutables del proyecto actual de Haskell en el cual te encuentres. Además podemos añadir algunos banderas para extender los componentes que se cargan, por ejemplo, <code>--test</code>, y <code>--bench</code>. Y otros flags de los cuales haré pequeños blog posts tipo píldora en algún otro momento.</p>
-<p>Volviendo a GHCi,</p>
+<p>Estamos utilizando <a href="https://docs.haskellstack.org/en/stable/ghci/">stack ghci</a> que carga los módulos de librerías y ejecutables del proyecto de Haskell en el cual te encuentres. Además podemos añadir algunos banderas para extender los componentes que se cargan, por ejemplo, <code>--test</code>, y <code>--bench</code>. Y otros flags, de los cuales podría hacer un blog posts express en algún momento (atento con eso).</p>
+<h2 id="lo-básico">4. Lo Básico</h2>
+<h3 id="ejecución-de-sentencias">4.1 Ejecución de sentencias</h3>
+<p>GHCi es un interprete o repl de Haskell y como tal lee expresiones, las evalua, retorna un resultado y repite este proceso. Por ejemplo:</p>
+<pre><code>Prelude&gt; let x = 3
+Prelude&gt; let y = 4
+Prelude&gt; let z = x + y
+Prelude&gt; z
+7</code></pre>
+<p>En el ejemplo anterior simplemente definimos x con 3 y y con 4 y z como el resultado de la suma de ambas cantidades. Y por supuesto, también puedes definir tus propias funciones.</p>
+<pre><code>Prelude&gt; let myFunc x y = x + y
+Prelude&gt; myFunc 3 4
+7</code></pre>
+<h3 id="comandos-básicos-del-prompt">4.2 Comandos básicos del prompt</h3>
+<p>Los siguientes comandos los voy a copiar y traducir directamente de <a href="http://dev.stephendiehl.com/hask/#ghci">What I Wish I Knew When Learning Haskell</a> y extenderé un poco la lista con algunos comandos faltantes:</p>
+<table style="width:41%;">
+<colgroup>
+<col width="5%" />
+<col width="5%" />
+<col width="31%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Comando</th>
+<th align="left">Atajo</th>
+<th align="left">Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>:reload</code></td>
+<td align="left"><code>:r</code></td>
+<td align="left">Recargar código</td>
+</tr>
+<tr class="even">
+<td align="left"><code>:type</code></td>
+<td align="left"><code>:t</code></td>
+<td align="left">Inspeccionar un tipo</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>:kind</code></td>
+<td align="left"><code>:k</code></td>
+<td align="left">Inspeccionar un kind</td>
+</tr>
+<tr class="even">
+<td align="left"><code>:info</code></td>
+<td align="left"><code>:i</code></td>
+<td align="left">Información adicional</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>:print</code></td>
+<td align="left"><code>:p</code></td>
+<td align="left">Imprimir una expresión</td>
+</tr>
+<tr class="even">
+<td align="left"><code>:edit</code></td>
+<td align="left"><code>:e</code></td>
+<td align="left">Cargar un archivo en el editor del sistema</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>:load</code></td>
+<td align="left"><code>:l</code></td>
+<td align="left">Asignar el módulo Main en el REPL</td>
+</tr>
+<tr class="even">
+<td align="left"><code>:add</code></td>
+<td align="left"><code>:ad</code></td>
+<td align="left">Cargar un archivo en el namespace del REPL</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>:browse</code></td>
+<td align="left"><code>:bro</code></td>
+<td align="left">Navegar por todos los símbolos del REPL</td>
+</tr>
+<tr class="even">
+<td align="left"><code>:cd</code></td>
+<td align="left"><code>:cd</code></td>
+<td align="left">Cambiar de directorio (provoca que se liberen los módulos cargados en REPL)</td>
+</tr>
+</tbody>
+</table>
+<p>A contiación, crea un proyecto simple con <code>stack</code> y juguemos un poco con GHCi desde ahí.</p>
+<pre><code>$ stack new ghci-test
+...
+
+$ stack ghci
+ghci-test-0.1.0.0: initial-build-steps (lib + exe)
+The following GHC options are incompatible with GHCi and have not been passed to it: -threaded
+Configuring GHCi with the following packages: ghci-test
+Using main module: 1. Package `ghci-test' component exe:ghci-test-exe with main-is file: /tmp/ghci-test/app/Main.hs
+GHCi, version 8.0.2: http://www.haskell.org/ghc/  :? for help
+[1 of 1] Compiling Lib              ( /tmp/ghci-test/src/Lib.hs, interpreted )
+Ok, modules loaded: Lib.
+[2 of 2] Compiling Main             ( /tmp/ghci-test/app/Main.hs, interpreted )
+Ok, modules loaded: Lib, Main.
+Loaded GHCi configuration from /tmp/ghci10117/ghci-script
+*Main Lib&gt;</code></pre>
+<p>El proyecto tiene un componente principal que se encuentra en <code>app/Main.hs</code> y es un ejecutable definido en el archivo <code>ghci-test.cabal</code>. Ahora sí, juguemos un poco:</p>
+<pre><code>*Main Lib&gt; -- Podemos ejecutar las funciones definidas en nuestra librería
+*Main Lib&gt; someFunc
+someFunc
+*Main Lib&gt; -- En este caso, solo era una función que imprime &quot;someFunc&quot;
+*Main Lib&gt; -- También podemos ejecutar la función principal (main)
+*Main Lib&gt; main
+someFunc
+*Main Lib&gt; -- Que en este caso solo llama a someFunc (lol)</code></pre>
+<p>Comencemos a ejecutar algunos comandos. En las siguientes expresiones se está inspeccionando el tipo de cada una de ellas.</p>
+<pre><code>*Main Lib&gt; :t &quot;Hello world!&quot;
+&quot;Hello world!&quot; :: [Char]
+*Main Lib&gt; :t someFunc
+someFunc :: IO ()
+*Main Lib&gt; :t map
+map :: (a -&gt; b) -&gt; [a] -&gt; [b]</code></pre>
+<p>Veamos algunos kinds:</p>
+<pre><code>*Main Lib&gt; :kind Maybe
+Maybe :: * -&gt; *
+*Main Lib&gt; :kind Maybe Int
+Maybe Int :: *
+*Main Lib&gt; :kind Either
+Either :: * -&gt; * -&gt; *</code></pre>
+<p>Yeah! Ahora algo de información adicional.</p>
+<pre><code>*Main Lib&gt; :info Maybe
+data Maybe a = Nothing | Just a         -- Defined in ‘GHC.Base’
+instance Eq a =&gt; Eq (Maybe a) -- Defined in ‘GHC.Base’
+instance Monad Maybe -- Defined in ‘GHC.Base’
+instance Functor Maybe -- Defined in ‘GHC.Base’
+instance Ord a =&gt; Ord (Maybe a) -- Defined in ‘GHC.Base’
+instance Read a =&gt; Read (Maybe a) -- Defined in ‘GHC.Read’
+instance Show a =&gt; Show (Maybe a) -- Defined in ‘GHC.Show’
+instance Applicative Maybe -- Defined in ‘GHC.Base’
+instance Foldable Maybe -- Defined in ‘Data.Foldable’
+instance Traversable Maybe -- Defined in ‘Data.Traversable’
+instance Monoid a =&gt; Monoid (Maybe a) -- Defined in ‘GHC.Base’
+
+*Main Lib&gt; :info Functor
+class Functor (f :: * -&gt; *) where
+  fmap :: (a -&gt; b) -&gt; f a -&gt; f b
+  (&lt;$) :: a -&gt; f b -&gt; f a
+  {-# MINIMAL fmap #-}
+        -- Defined in ‘GHC.Base’
+instance Functor (Either a) -- Defined in ‘Data.Either’
+instance Functor [] -- Defined in ‘GHC.Base’
+instance Functor Maybe -- Defined in ‘GHC.Base’
+instance Functor IO -- Defined in ‘GHC.Base’
+instance Functor ((-&gt;) r) -- Defined in ‘GHC.Base’
+instance Functor ((,) a) -- Defined in ‘GHC.Base’
+
+*Main Lib&gt; :i someFunc
+someFunc :: IO ()       -- Defined at /tmp/ghci-test/src/Lib.hs:6:1</code></pre>
+<p>Podemos ver que al utilizar <code>:info</code> (o <code>:i</code>) sobre un tipo de datos, nos da información sobre sus constructores y las instancias que están cargadas en el REPL actualmente. Si lo hacemos sobre una clase de tipos (<code>type class</code>) podremos observar el <code>kind</code> del tipo que espera y las funciones que define la clase y sus definiciones mínimas, las instancias de esa clase y el módulo en el cual están definidas. Vaya que es información útil. Y si lo hacemos sobre nuestras expresiones (como funciones) nos mostrará el lugar en el cual están definidos. ¡Ojo!, las instancias que se muestran están siendo filtradas, para mostrar todas se debe utilizar <code>:info!</code> (no existe atajo para esta opción).</p>
 
 <div id="disqus_thread"></div>
 <script>
