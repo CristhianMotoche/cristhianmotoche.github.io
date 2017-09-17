@@ -85,7 +85,7 @@ cuales hayas creado tu cuenta en Hackage. Las ingresas y ¡está listo! Podras v
 tu paquete en la lista de [paquetes candidatos][hackage-candidate-packages].
 
 Espero que te haya gustado, cualquier comentario, sugerencia o preguta la puedes
-hacer en los comentarios de Disqus. Te aseguro que contestaré tan rápido como pueda. ;)
+hacer en los comentarios de Disqus. Te aseguro que contestaré tan rápido como pueda. `>:-D`
 ByE!
 
 [hackage]: http://hackage.haskell.org/
