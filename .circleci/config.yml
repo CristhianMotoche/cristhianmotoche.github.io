@@ -7,8 +7,6 @@ jobs:
       - image: fpco/stack-build:lts-4.2
     steps:
       - checkout
-      - run: mkdir -p .stack-work
-      - run: bash ./install-stack.sh
       - run: stack setup
       - run: stack build --fast -j2
       - run: git submodule init
