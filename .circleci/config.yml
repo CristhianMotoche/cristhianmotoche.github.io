@@ -1,0 +1,45 @@
+---
+version: 2
+
+jobs:
+  build:
+    docker:
+      - image: fpco/stack-build:lts-4.2
+    steps:
+      - checkout
+      - run: mkdir -p .stack-work
+      - run: bash ./install-stack.sh
+      - run: stack build --fast -j2
+      - run: git submodule init
+      - run: git submodule update
+      - run: cd _site/ && git checkout master
+      - run: stack exec site build
+
+  deploy:
+    docker:
+      - image: fpco/stack-build:lts-4.2
+    steps:
+      - checkout
+      - run: git config --global user.email cristhian.motoche@gmail.com
+      - run: git config --global user.name CristhianMotoche
+      - run: cd _site/ && git status
+      - run: cd _site/ && git add --all
+      - run: cd _site/ && git commit -m "Update (`date '+%F %T %Z'`) [ci skip]"
+      - run: cd _site/ && git push origin master
+      - run: git status
+      - run: git add _site/
+      - run: git commit -m "Update _site (`date '+%F %T %Z'`) [ci skip]"
+      - run: git push origin hakyll
+
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - hakyll
