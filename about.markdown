@@ -2,8 +2,8 @@
 title: About
 ---
 I'm Cristhian Motoche a student from Quito, Ecuador. I started this blog post
-page to improve my writting skills, and because I want to share some of my knowledge
-with you. I will be adding some blog posts ocassionally.
+page to improve my writting skills, and because I want to.
+I will be adding some blog posts ocassionally.
 
 
 # Contact info:
