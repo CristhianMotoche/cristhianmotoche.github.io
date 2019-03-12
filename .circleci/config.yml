@@ -3,22 +3,26 @@ version: 2
 
 jobs:
   build:
+    branches:
+      only:
+        - hakyll
     docker:
       - image: fpco/stack-build:lts-4.2
     steps:
       - checkout
+      - restore_cache:
+          key: v1-myapp-{{ .Branch }}-{{ checksum "cristhianmotoche-github-io.cabal" }}
       - run: stack setup
       - run: stack build --fast -j2
+      - save_cache:
+          key: v1-myapp-{{ .Branch }}-{{ checksum "cristhianmotoche-github-io.cabal" }}
+          paths:
+            - ~/.stack
+            - .stack-work
       - run: git submodule init
       - run: git submodule update
       - run: cd _site/ && git checkout master
       - run: stack exec site build
-
-  deploy:
-    docker:
-      - image: fpco/stack-build:lts-4.2
-    steps:
-      - checkout
       - run: git config --global user.email cristhian.motoche@gmail.com
       - run: git config --global user.name CristhianMotoche
       - run: cd _site/ && git status
@@ -29,16 +33,3 @@ jobs:
       - run: git add _site/
       - run: git commit -m "Update _site (`date '+%F %T %Z'`) [ci skip]"
       - run: git push origin hakyll
-
-workflows:
-  version: 2
-  build-deploy:
-    jobs:
-      - build
-      - deploy:
-          requires:
-            - build
-          filters:
-            branches:
-              only:
-                - hakyll
