@@ -3,6 +3,9 @@ version: 2
 
 jobs:
   build:
+    branches:
+      only:
+        - hakyll
     docker:
       - image: fpco/stack-build:lts-4.2
     steps:
