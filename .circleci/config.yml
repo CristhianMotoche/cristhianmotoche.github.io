@@ -7,7 +7,7 @@ jobs:
       only:
         - hakyll
     docker:
-      - image: fpco/stack-build:lts-4.2
+      - image: fpco/stack-build:lts-12.26
     steps:
       - checkout
       - restore_cache:
