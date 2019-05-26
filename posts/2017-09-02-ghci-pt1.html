@@ -47,10 +47,9 @@
 
 <h2 id="nota-inicial">Nota inicial:</h2>
 <p>Esta es una serie de tutoriales dedicados a explorar el interprete de <a href="https://www.haskell.org/ghc/">Glasgow Haskell Compiler o GHC</a>. Bueno, ¿y por qué no empezar con algo básico de Haskell? Principalmente, porque ya conozco lo básico del lenguaje y estoy seguro que pueden encontrar esa información fácilmente buscándola en Internet. Por ejemplo: <a href="http://aprendehaskell.es/">Aprende haskell por el bien de todos</a>, los blog posts de <a href="http://sillybytes.net/2016/06/aprende-haskell-rapido-y-dificil_29.html">Silly Bytes</a>, varios video tutoriales en <a href="https://www.youtube.com/results?search_query=introduccion+a+haskell">YouTube</a>. Y eso solo en Español, en Inglés encontrarás miles de recursos. No esperes a que creen una máquina como la de Matrix.</p>
-<div class="figure">
-<img src="../images/ghci-pt1/neo-ya-se-haskell.jpg" alt="Imagen 1. Neo Aprende Haskell" />
-<p class="caption"><strong>Imagen 1. Neo Aprende Haskell</strong></p>
-</div>
+<figure>
+<img src="../images/ghci-pt1/neo-ya-se-haskell.jpg" alt="Imagen 1. Neo Aprende Haskell" /><figcaption><strong>Imagen 1. Neo Aprende Haskell</strong></figcaption>
+</figure>
 <h1 id="requisitos">1. Requisitos:</h1>
 <p>Para este blog post utilicé lo siguiente:</p>
 <ul>
@@ -105,69 +104,69 @@ Prelude&gt; myFunc 3 4
 7</code></pre>
 <h3 id="comandos-básicos-del-prompt">4.2 Comandos básicos del prompt</h3>
 <p>Los siguientes comandos los voy a copiar y traducir directamente de <a href="http://dev.stephendiehl.com/hask/#ghci">What I Wish I Knew When Learning Haskell</a> y extenderé un poco la lista con algunos comandos faltantes:</p>
-<table style="width:41%;">
+<table>
 <colgroup>
-<col width="5%" />
-<col width="5%" />
-<col width="31%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 80%" />
 </colgroup>
 <thead>
 <tr class="header">
-<th align="left">Comando</th>
-<th align="left">Atajo</th>
-<th align="left">Descripción</th>
+<th>Comando</th>
+<th>Atajo</th>
+<th style="text-align: left;">Descripción</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left"><code>:reload</code></td>
-<td align="left"><code>:r</code></td>
-<td align="left">Recargar código</td>
+<td><code>:reload</code></td>
+<td><code>:r</code> | Recar</td>
+<td style="text-align: left;">Recargar código</td>
 </tr>
 <tr class="even">
-<td align="left"><code>:type</code></td>
-<td align="left"><code>:t</code></td>
-<td align="left">Inspeccionar un tipo</td>
+<td><code>:type</code> |<code>:t</code></td>
+<td><code>:t</code> |</td>
+<td style="text-align: left;">Inspeccionar un tipo</td>
 </tr>
 <tr class="odd">
-<td align="left"><code>:kind</code></td>
-<td align="left"><code>:k</code></td>
-<td align="left">Inspeccionar un kind</td>
+<td><code>:kind</code> |<code>:k</code></td>
+<td><code>:k</code> |</td>
+<td style="text-align: left;">Inspeccionar un kind</td>
 </tr>
 <tr class="even">
-<td align="left"><code>:info</code></td>
-<td align="left"><code>:i</code></td>
-<td align="left">Información adicional</td>
+<td><code>:info</code> |<code>:i</code></td>
+<td><code>:i</code> |</td>
+<td style="text-align: left;">Información adicional</td>
 </tr>
 <tr class="odd">
-<td align="left"><code>:print</code></td>
-<td align="left"><code>:p</code></td>
-<td align="left">Imprimir una expresión</td>
+<td><code>:print</code> |<code>:p</code></td>
+<td><code>:p</code> |</td>
+<td style="text-align: left;">Imprimir una expresión</td>
 </tr>
 <tr class="even">
-<td align="left"><code>:edit</code></td>
-<td align="left"><code>:e</code></td>
-<td align="left">Cargar un archivo en el editor del sistema</td>
+<td><code>:edit</code> |<code>:e</code></td>
+<td><code>:e</code> |</td>
+<td style="text-align: left;">Cargar un archivo en el editor del sistema</td>
 </tr>
 <tr class="odd">
-<td align="left"><code>:load</code></td>
-<td align="left"><code>:l</code></td>
-<td align="left">Asignar el módulo Main en el REPL</td>
+<td><code>:load</code> |<code>:l</code></td>
+<td><code>:l</code> |</td>
+<td style="text-align: left;">Asignar el módulo Main en el REPL</td>
 </tr>
 <tr class="even">
-<td align="left"><code>:add</code></td>
-<td align="left"><code>:ad</code></td>
-<td align="left">Cargar un archivo en el namespace del REPL</td>
+<td><code>:add</code></td>
+<td><code>:ad</code> | Carg</td>
+<td style="text-align: left;">Cargar un archivo en el namespace del REPL</td>
 </tr>
 <tr class="odd">
-<td align="left"><code>:browse</code></td>
-<td align="left"><code>:bro</code></td>
-<td align="left">Navegar por todos los símbolos del REPL</td>
+<td><code>:browse</code></td>
+<td><code>:bro</code></td>
+<td style="text-align: left;">Navegar por todos los símbolos del REPL</td>
 </tr>
 <tr class="even">
-<td align="left"><code>:cd</code></td>
-<td align="left"><code>:cd</code></td>
-<td align="left">Cambiar de directorio (provoca que se liberen los módulos cargados en REPL)</td>
+<td><code>:cd</code></td>
+<td><code>:cd</code></td>
+<td style="text-align: left;">Cambiar de directorio (provoca que se liberen los módulos cargados en REPL)</td>
 </tr>
 </tbody>
 </table>
