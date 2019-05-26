@@ -29,3 +29,4 @@ stack exec site watch
 ```
 
 You may open [http://localhost:8000/](http://localhost:8000/).
+
