@@ -47,7 +47,36 @@
 
 <p>Currently, this is the process that I do to create a new post:</p>
 <p><img src="../images/create-new-blog/create-new-blog.gif" alt="drawing" width="1000" /></p>
-<p>Yeah, I know, the dates are incorrect. I just fixed that but also the process to create a post is a bummer! I must automate this.</p>
+<p>Yeah, I know, the dates are wrong. I just fixed that, but that’s not the worst. The worst is that I have to do this each time that I want to create a new post. That’s a bummer! I must automate this!</p>
+<p>I’m using <a href="https://hackage.haskell.org/package/hakyll">hakyll</a> to generate static pages for this blog post. This tool provides a <a href="https://hackage.haskell.org/package/hakyll-4.12.5.2/docs/Hakyll-Main.html">set of functions</a> to run the hakyll compiler. I’m using <code>hakyll</code> since it just takes the rules and is ready to go:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb1-1" title="1"><span class="ot">main ::</span> <span class="dt">IO</span> ()</a>
+<a class="sourceLine" id="cb1-2" title="2">main <span class="fu">=</span> hakyll rules</a></code></pre></div>
+<p>However, <code>hakyll</code> provides a CLI with a predefined set of commands:</p>
+<pre><code>$ stack exec site
+
+Missing: COMMAND
+
+Usage: site [-v|--verbose] COMMAND
+  site - Static site compiler created with Hakyll
+
+Available options:
+  -h,--help                Show this help text
+  -v,--verbose             Run in verbose mode
+
+Available commands:
+  build                    Generate the site
+  check                    Validate the site output
+  clean                    Clean up and remove cache
+  deploy                   Upload/deploy your site
+  preview                  [DEPRECATED] Please use the watch command
+  rebuild                  Clean and build again
+  server                   Start a preview server
+  watch                    Autocompile on changes and start a preview server.
+                           You can watch and recompile without running a server</code></pre>
+<p>All of those commands are useful, but I’d love to extend the commands to add a new one that generates a new post. Something like:</p>
+<pre><code>$ stack exec site new-post 'Post name'
+POST GENERATED: posts/2019-05-28-post-name.md</code></pre>
+<p>And that’s going to be the goal of this post.</p>
 
 <div id="disqus_thread"></div>
 <script>
