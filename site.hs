@@ -1,12 +1,25 @@
 --------------------------------------------------------------------------------
 {-# LANGUAGE OverloadedStrings #-}
 import           Data.Monoid (mappend)
+import           Options.Applicative
 import           Hakyll
 
 
---------------------------------------------------------------------------------
-main :: IO ()
-main = hakyll $ do
+--
+data Opts = New String | Hakyll Options deriving Show
+
+
+-- |
+parser :: Parser Opts
+parser =
+  (New <$> strOption
+    (long "name"
+     <> short 'o'
+     <> metavar "BLOG_NAME")) <|> (Hakyll <$> undefined)
+
+-- |
+rules :: Rules ()
+rules = do
     match "images/**/*" $ do
         route   idRoute
         compile copyFileCompiler
@@ -82,7 +95,7 @@ main = hakyll $ do
     match "templates/*" $ compile templateCompiler
 
 
---------------------------------------------------------------------------------
+-- |
 postCtxWithTags :: Tags -> Context String
 postCtxWithTags tags = tagsField "tags" tags `mappend` postCtx
 
@@ -90,3 +103,10 @@ postCtx :: Context String
 postCtx =
     dateField "date" "%B %e, %Y" `mappend`
     defaultContext
+
+-- |
+main :: IO ()
+main = do
+  opts <- execParser (info parser fullDesc)
+  print opts
+  hakyll rules

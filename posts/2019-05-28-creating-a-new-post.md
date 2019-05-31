@@ -1,11 +1,11 @@
 ---
-title: Things to create a new post. What a bummer!
+title: Steps to create a new post. What a bummer!
 date: 2019-05-28 00:00:00
 tags: en, things
 description: As a programmer, I know that I need to automate this.
 ---
 
-Currently, this is the process that I do to create a new post:
+Currently, this is the process that I follow to create a new post:
 
 <img src="/images/create-new-blog/create-new-blog.gif" alt="drawing" width="1000"/>
 
@@ -58,5 +58,26 @@ POST GENERATED: posts/2019-05-28-post-name.md
 
 And that's going to be the goal of this post.
 
+# Approach
+
+First, I'm going to add [optparse-applicative][optparse-applicative] as part of
+my dependencies. Now, I'm going to define a sum type for the valid commands:
+
+```haskell
+data Opts = New String | Hakyll Options deriving Show
+```
+
+Now, let's define a `Parser`:
+
+```haskell
+parser :: Parser Opts
+parser =
+  (New <$> strOption
+    (long "name"
+     <> short 'o'
+     <> metavar "BLOG_NAME")) <|> (Hakyll <$> undefined)
+```
+
 [hakyll]:  https://hackage.haskell.org/package/hakyll
 [hakyll-main]: https://hackage.haskell.org/package/hakyll-4.12.5.2/docs/Hakyll-Main.html
+[optparse-applicative]: https://hackage.haskell.org/package/optparse-applicative
