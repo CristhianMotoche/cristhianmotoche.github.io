@@ -148,7 +148,7 @@ postCtx =
 main :: IO ()
 main = do
   args <- getArgs
-  let x = execParserPure defaultPrefs (info parser fullDesc) args
-  case getParseResult x of
+  let parseResult = execParserPure defaultPrefs (info parser fullDesc) args
+  case getParseResult parseResult of
     Just (New name) -> mkNewPost name >>= createNewPost
     _ -> hakyll rules

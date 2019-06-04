@@ -1,7 +1,7 @@
 ---
 title: Steps to create a new post. What a bummer!
 date: 2019-05-28 00:00:00
-tags: en, things
+tags: en, things, pending
 description: As a programmer, I know that I need to automate this.
 ---
 
@@ -58,13 +58,16 @@ POST GENERATED: posts/2019-05-28-post-name.md
 
 And that's going to be the goal of this post.
 
-# Approach
+# Approach 1
 
-First, I'm going to add [optparse-applicative][optparse-applicative] as part of
-my dependencies. Now, I'm going to define a sum type for the valid commands:
+My first approach was to extend the commands from `hakyll`, but it seems it's
+not currently possible. So, I decided to try [optparse-applicative][optparse-applicative]
+and create a command line interface (CLI) on my own. However, I would have had
+to rewrite a lot of code for the `hakyll` commands. So, I decided just to add a
+new command and then use the rest of `hakyll` commands.
 
 ```haskell
-data Opts = New String | Hakyll Options deriving Show
+data Opts = New String deriving Show
 ```
 
 Now, let's define a `Parser`:
@@ -72,12 +75,21 @@ Now, let's define a `Parser`:
 ```haskell
 parser :: Parser Opts
 parser =
-  (New <$> strOption
-    (long "name"
-     <> short 'o'
-     <> metavar "BLOG_NAME")) <|> (Hakyll <$> undefined)
+  New <$>
+    subparser
+      (command "new" (info (option str (long "name")) (progDesc "New post")))
 ```
+
+Unfortunately, I cannot use `execParser` or `customExecParser` from
+`optparse-applicative` since both use [`handleParseResult`][handleParseResult]
+and that function uses `exitWith` from `System.Exit`. We don't want to exit
+on failure, because on failure we want to use `hakyll` commands. Fortunately,
+`optparse-applicative` provides [`execParsePure`][execParsePure]
+
+# To be continued... (soon and in this post, sorry I'm a little bit lazy)
 
 [hakyll]:  https://hackage.haskell.org/package/hakyll
 [hakyll-main]: https://hackage.haskell.org/package/hakyll-4.12.5.2/docs/Hakyll-Main.html
 [optparse-applicative]: https://hackage.haskell.org/package/optparse-applicative
+[handleParseResult]: https://hackage.haskell.org/package/optparse-applicative-0.14.3.0/docs/src/Options.Applicative.Extra.html#handleParseResult
+[execParsePure]: https://hackage.haskell.org/package/optparse-applicative-0.14.3.0/docs/Options-Applicative.html#v:execParserPure
