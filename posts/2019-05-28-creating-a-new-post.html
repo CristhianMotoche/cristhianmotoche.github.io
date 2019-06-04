@@ -31,7 +31,7 @@
         </ul>
       </nav>
       <div class="content">
-        <h1 class="content__title">Things to create a new post. What a bummer!</h1>
+        <h1 class="content__title">Steps to create a new post. What a bummer!</h1>
         <div class="content_body">
           <link href="../css/hk-pyg.css" rel="stylesheet">
 <link href="../css/tables.css" rel="stylesheet">
@@ -41,11 +41,11 @@
 </div>
 <div class="info">
     
-    Tags: <a href="../tags/en.html">en</a>, <a href="../tags/things.html">things</a>
+    Tags: <a href="../tags/en.html">en</a>, <a href="../tags/things.html">things</a>, <a href="../tags/pending.html">pending</a>
     
 </div>
 
-<p>Currently, this is the process that I do to create a new post:</p>
+<p>Currently, this is the process that I follow to create a new post:</p>
 <p><img src="../images/create-new-blog/create-new-blog.gif" alt="drawing" width="1000" /></p>
 <p>Yeah, I know, the dates are wrong. I just fixed that, but that’s not the worst. The worst is that I have to do this each time that I want to create a new post. That’s a bummer! I must automate this!</p>
 <p>I’m using <a href="https://hackage.haskell.org/package/hakyll">hakyll</a> to generate static pages for this blog post. This tool provides a <a href="https://hackage.haskell.org/package/hakyll-4.12.5.2/docs/Hakyll-Main.html">set of functions</a> to run the hakyll compiler. I’m using <code>hakyll</code> since it just takes the rules and is ready to go:</p>
@@ -77,6 +77,17 @@ Available commands:
 <pre><code>$ stack exec site new-post 'Post name'
 POST GENERATED: posts/2019-05-28-post-name.md</code></pre>
 <p>And that’s going to be the goal of this post.</p>
+<h1 id="approach-1">Approach 1</h1>
+<p>My first approach was to extend the commands from <code>hakyll</code>, but it seems it’s not currently possible. So, I decided to try <a href="https://hackage.haskell.org/package/optparse-applicative">optparse-applicative</a> and create a command line interface (CLI) on my own. However, I would have had to rewrite a lot of code for the <code>hakyll</code> commands. So, I decided just to add a new command and then use the rest of <code>hakyll</code> commands.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb4-1" title="1"><span class="kw">data</span> <span class="dt">Opts</span> <span class="fu">=</span> <span class="dt">New</span> <span class="dt">String</span> <span class="kw">deriving</span> <span class="dt">Show</span></a></code></pre></div>
+<p>Now, let’s define a <code>Parser</code>:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb5-1" title="1"><span class="ot">parser ::</span> <span class="dt">Parser</span> <span class="dt">Opts</span></a>
+<a class="sourceLine" id="cb5-2" title="2">parser <span class="fu">=</span></a>
+<a class="sourceLine" id="cb5-3" title="3">  <span class="dt">New</span> <span class="fu">&lt;$&gt;</span></a>
+<a class="sourceLine" id="cb5-4" title="4">    subparser</a>
+<a class="sourceLine" id="cb5-5" title="5">      (command <span class="st">&quot;new&quot;</span> (info (option str (long <span class="st">&quot;name&quot;</span>)) (progDesc <span class="st">&quot;New post&quot;</span>)))</a></code></pre></div>
+<p>Unfortunately, I cannot use <code>execParser</code> or <code>customExecParser</code> from <code>optparse-applicative</code> since both use <a href="https://hackage.haskell.org/package/optparse-applicative-0.14.3.0/docs/src/Options.Applicative.Extra.html#handleParseResult"><code>handleParseResult</code></a> and that function uses <code>exitWith</code> from <code>System.Exit</code>. We don’t want to exit on failure, because on failure we want to use <code>hakyll</code> commands. Fortunately, <code>optparse-applicative</code> provides <a href="https://hackage.haskell.org/package/optparse-applicative-0.14.3.0/docs/Options-Applicative.html#v:execParserPure"><code>execParsePure</code></a></p>
+<h1 id="to-be-continued-soon-and-in-this-post-sorry-im-a-little-bit-lazy">To be continued… (soon and in this post, sorry I’m a little bit lazy)</h1>
 
 <div id="disqus_thread"></div>
 <script>
