@@ -1,21 +1,60 @@
 --------------------------------------------------------------------------------
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RecordWildCards   #-}
+{-# LANGUAGE QuasiQuotes       #-}
 import           Data.Monoid (mappend)
+import           System.Directory
+import           System.FilePath
 import           Options.Applicative
 import           Hakyll
+import           System.Environment
+import           Data.Time
+import           Data.String.Interpolate
 
 
 --
-data Opts = New String | Hakyll Options deriving Show
+data Opts = New String deriving Show
 
 
 -- |
 parser :: Parser Opts
 parser =
-  (New <$> strOption
-    (long "name"
-     <> short 'o'
-     <> metavar "BLOG_NAME")) <|> (Hakyll <$> undefined)
+  New <$> subparser
+    (command "new" (info (option str (long "name")) (progDesc "New post")))
+
+-- |
+data Post = Post { name :: String, date :: UTCTime } deriving Show
+
+mkNewPost :: String -> IO Post
+mkNewPost name_ = Post name_ <$> getCurrentTime
+
+createNewPost :: Post -> IO ()
+createNewPost post@Post{..} =
+  let dateFile = formatTime defaultTimeLocale "%Y-%m-%d" date
+      filename = dateFile ++ "-" ++ replace ' ' '-' name ++ ".md"
+      filepath = "posts" </> filename
+      replace _ _ "" = ""
+      replace fromChar toChar (x:xs) =
+        if x == fromChar
+           then toChar:replace fromChar toChar xs
+           else x:replace fromChar toChar xs
+  in do
+    exists <- doesFileExist filepath
+    if exists
+       then return ()
+       else writeFile filepath (genTemplate post)
+
+genTemplate :: Post -> String
+genTemplate Post{..} = [i|---
+title: #{name}
+date: #{formatTime defaultTimeLocale "%Y-%m-%d %H:%M:%S" date}
+tags: pending
+description: Pending
+---
+# Title
+
+Content
+|]
 
 -- |
 rules :: Rules ()
@@ -104,9 +143,12 @@ postCtx =
     dateField "date" "%B %e, %Y" `mappend`
     defaultContext
 
+
 -- |
 main :: IO ()
 main = do
-  opts <- execParser (info parser fullDesc)
-  print opts
-  hakyll rules
+  args <- getArgs
+  let x = execParserPure defaultPrefs (info parser fullDesc) args
+  case getParseResult x of
+    Just (New name) -> mkNewPost name >>= createNewPost
+    _ -> hakyll rules
