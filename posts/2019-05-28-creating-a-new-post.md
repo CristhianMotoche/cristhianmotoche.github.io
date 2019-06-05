@@ -80,11 +80,22 @@ parser =
       (command "new" (info (option str (long "name")) (progDesc "New post")))
 ```
 
-Unfortunately, I cannot use `execParser` or `customExecParser` from
-`optparse-applicative` since both use [`handleParseResult`][handleParseResult]
-and that function uses `exitWith` from `System.Exit`. We don't want to exit
-on failure, because on failure we want to use `hakyll` commands. Fortunately,
-`optparse-applicative` provides [`execParsePure`][execParsePure]
+Unfortunately, `execParser` or `customExecParser` from
+`optparse-applicative` use [`handleParseResult`][handleParseResult]
+that exits when the command is not in the parser. I don't want to exit
+on failure, because on failure I want to attempt `hakyll` commands. Fortunately,
+`optparse-applicative` provides [`execParsePure`][execParsePure] so that I
+can handle the response as I prefer. In this case, I attempted this:
+
+```haskell
+main :: IO ()
+main = do
+  args <- getArgs
+  let parseResult = execParserPure defaultPrefs (info parser fullDesc) args
+  case getParseResult parseResult of
+    Just (New name) -> mkNewPost name >>= createNewPost
+    _ -> hakyll rules
+```
 
 # To be continued... (soon and in this post, sorry I'm a little bit lazy)
 

@@ -1,15 +1,16 @@
 --------------------------------------------------------------------------------
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RecordWildCards   #-}
 {-# LANGUAGE QuasiQuotes       #-}
-import           Data.Monoid (mappend)
-import           System.Directory
-import           System.FilePath
-import           Options.Applicative
-import           Hakyll
-import           System.Environment
-import           Data.Time
+{-# LANGUAGE RecordWildCards   #-}
+import           Control.Monad           (void)
+import           Data.Monoid             (mappend)
 import           Data.String.Interpolate
+import           Data.Time
+import           Hakyll
+import           Options.Applicative
+import           System.Directory
+import           System.Environment
+import           System.FilePath
 
 
 --
@@ -148,7 +149,18 @@ postCtx =
 main :: IO ()
 main = do
   args <- getArgs
-  let parseResult = execParserPure defaultPrefs (info parser fullDesc) args
-  case getParseResult parseResult of
-    Just (New name) -> mkNewPost name >>= createNewPost
-    _ -> hakyll rules
+  let parseResult =
+        execParserPure
+          (prefs showHelpOnError)
+          (info (helper <*> parser)
+                (fullDesc <> progDesc "Custom commands"))
+          args
+  case parseResult of
+    Success (New name) -> mkNewPost name >>= createNewPost
+    Failure failure    -> do
+      progname <- getProgName
+      let (msg, _) = renderFailure failure progname
+      putStrLn msg
+      putStrLn "\nHAKYLL COMMANDS:"
+      hakyll rules
+    completionInvoke   -> void $ handleParseResult completionInvoke
