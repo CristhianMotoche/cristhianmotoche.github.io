@@ -86,7 +86,14 @@ POST GENERATED: posts/2019-05-28-post-name.md</code></pre>
 <a class="sourceLine" id="cb5-3" title="3">  <span class="dt">New</span> <span class="fu">&lt;$&gt;</span></a>
 <a class="sourceLine" id="cb5-4" title="4">    subparser</a>
 <a class="sourceLine" id="cb5-5" title="5">      (command <span class="st">&quot;new&quot;</span> (info (option str (long <span class="st">&quot;name&quot;</span>)) (progDesc <span class="st">&quot;New post&quot;</span>)))</a></code></pre></div>
-<p>Unfortunately, I cannot use <code>execParser</code> or <code>customExecParser</code> from <code>optparse-applicative</code> since both use <a href="https://hackage.haskell.org/package/optparse-applicative-0.14.3.0/docs/src/Options.Applicative.Extra.html#handleParseResult"><code>handleParseResult</code></a> and that function uses <code>exitWith</code> from <code>System.Exit</code>. We don’t want to exit on failure, because on failure we want to use <code>hakyll</code> commands. Fortunately, <code>optparse-applicative</code> provides <a href="https://hackage.haskell.org/package/optparse-applicative-0.14.3.0/docs/Options-Applicative.html#v:execParserPure"><code>execParsePure</code></a></p>
+<p>Unfortunately, <code>execParser</code> or <code>customExecParser</code> from <code>optparse-applicative</code> use <a href="https://hackage.haskell.org/package/optparse-applicative-0.14.3.0/docs/src/Options.Applicative.Extra.html#handleParseResult"><code>handleParseResult</code></a> that exits when the command is not in the parser. I don’t want to exit on failure, because on failure I want to attempt <code>hakyll</code> commands. Fortunately, <code>optparse-applicative</code> provides <a href="https://hackage.haskell.org/package/optparse-applicative-0.14.3.0/docs/Options-Applicative.html#v:execParserPure"><code>execParsePure</code></a> so that I can handle the response as I prefer. In this case, I attempted this:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb6-1" title="1"><span class="ot">main ::</span> <span class="dt">IO</span> ()</a>
+<a class="sourceLine" id="cb6-2" title="2">main <span class="fu">=</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb6-3" title="3">  args <span class="ot">&lt;-</span> getArgs</a>
+<a class="sourceLine" id="cb6-4" title="4">  <span class="kw">let</span> parseResult <span class="fu">=</span> execParserPure defaultPrefs (info parser fullDesc) args</a>
+<a class="sourceLine" id="cb6-5" title="5">  <span class="kw">case</span> getParseResult parseResult <span class="kw">of</span></a>
+<a class="sourceLine" id="cb6-6" title="6">    <span class="dt">Just</span> (<span class="dt">New</span> name) <span class="ot">-&gt;</span> mkNewPost name <span class="fu">&gt;&gt;=</span> createNewPost</a>
+<a class="sourceLine" id="cb6-7" title="7">    _ <span class="ot">-&gt;</span> hakyll rules</a></code></pre></div>
 <h1 id="to-be-continued-soon-and-in-this-post-sorry-im-a-little-bit-lazy">To be continued… (soon and in this post, sorry I’m a little bit lazy)</h1>
 
 <div id="disqus_thread"></div>
