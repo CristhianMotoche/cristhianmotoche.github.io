@@ -58,7 +58,7 @@ POST GENERATED: posts/2019-05-28-post-name.md
 
 And that's going to be the goal of this post.
 
-# Approach
+# Approach #1
 
 My first approach was to extend the commands from `hakyll`, but it seems it's
 not currently possible. So, I decided to try [optparse-applicative][optparse-applicative]
@@ -159,8 +159,38 @@ $ ls posts/
 2019-06-06-some-post.md
 ```
 
-And, that's it! If you ever want to extend the `hakyll` commands, this is a valid
-approach. Thanks!
+And if you want to execute the `hakyll` commands:
+
+```
+$ stack exec site watch
+CUSTOM COMMANDS
+Invalid argument `watch'
+
+Usage: site COMMAND
+
+Available options:
+  -h,--help                Show this help text
+
+Available commands:
+  new                      New post
+
+HAKYLL COMMANDS
+Listening on http://127.0.0.1:8000
+Initialising...
+  Creating store...
+  Creating provider...
+  Running rules...
+Checking for out-of-date items
+Compiling
+Success
+```
+
+You: Pfff! That's gonna print the failure of your parser dummy! That's terrible -_-
+
+I: Definatelly, I agree with you. I'm going to create a look for a new approach
+but so far this will work.
+
+Thank you for reading.
 
 ByE!
 

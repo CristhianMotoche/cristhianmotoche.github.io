@@ -160,8 +160,8 @@ main = do
     Failure failure    -> do
       progname <- getProgName
       let (msg, _) = renderFailure failure progname
-      putStrLn "# CUSTOM COMMANDS"
+      putStrLn "CUSTOM COMMANDS"
       hPutStrLn stderr msg
-      putStrLn "\n# HAKYLL COMMANDS"
+      putStrLn "\nHAKYLL COMMANDS"
       hakyll rules
     completionInvoke   -> void $ handleParseResult completionInvoke
