@@ -58,7 +58,7 @@ POST GENERATED: posts/2019-05-28-post-name.md
 
 And that's going to be the goal of this post.
 
-# Approach 1
+# Approach
 
 My first approach was to extend the commands from `hakyll`, but it seems it's
 not currently possible. So, I decided to try [optparse-applicative][optparse-applicative]
@@ -91,13 +91,78 @@ can handle the response as I prefer. In this case, I attempted this:
 main :: IO ()
 main = do
   args <- getArgs
-  let parseResult = execParserPure defaultPrefs (info parser fullDesc) args
-  case getParseResult parseResult of
-    Just (New name) -> mkNewPost name >>= createNewPost
-    _ -> hakyll rules
+  let parseResult =
+        execParserPure
+          (prefs showHelpOnError)
+          (info (helper <*> parser) fullDesc)
+          args
+  case parseResult of
+    Success (New name) -> mkNewPost name >>= createNewPost
+    Failure failure    -> do
+      progname <- getProgName
+      let (msg, _) = renderFailure failure progname
+      putStrLn "# CUSTOM COMMANDS"
+      hPutStrLn stderr msg
+      putStrLn "\n# HAKYLL COMMANDS"
+      hakyll rules
+    completionInvoke   -> void $ handleParseResult completionInvoke
 ```
 
-# To be continued... (soon and in this post, sorry I'm a little bit lazy)
+# TODO: FIX THE REFERENCE TYPES:
+`execParserPure` takes a `ParseInfo` and returns a `ParserResult` I simply
+did pattern matching over that result. If the parsing is successful and parses
+`New name` it creates a new post with the current date and the given `name`.
+If it fails, it renders the failure, prints some messages to separate the
+results from my custom commands and the ones from `hakyll`,
+redirects the parsing error to `stderr`, and then executes any `hakyll` command.
+Finally, if the parser result is `Completition`, I delegate `handleParseResult`
+to take care of that.
+
+Now the results:
+
+```
+$ stack exec site
+
+# CUSTOM COMMANDS
+Missing: COMMAND
+
+Usage: site COMMAND
+
+Available options:
+  -h,--help                Show this help text
+
+Available commands:
+  new                      New post
+
+# HAKYLL COMMANDS
+Missing: COMMAND
+
+Usage: site [-v|--verbose] COMMAND
+  site - Static site compiler created with Hakyll
+
+Available options:
+  -h,--help                Show this help text
+  -v,--verbose             Run in verbose mode
+
+Available commands:
+  build                    Generate the site
+  check                    Validate the site output
+  ...
+```
+
+Nice! Now, I can do this:
+
+```
+$ stack exec site new --name "some post"
+$ ls posts/
+...
+2019-06-06-some-post.md
+```
+
+And, that's it! If you ever want to extend the `hakyll` commands, this is a valid
+approach. Thanks!
+
+ByE!
 
 [hakyll]:  https://hackage.haskell.org/package/hakyll
 [hakyll-main]: https://hackage.haskell.org/package/hakyll-4.12.5.2/docs/Hakyll-Main.html

@@ -11,6 +11,7 @@ import           Options.Applicative
 import           System.Directory
 import           System.Environment
 import           System.FilePath
+import           System.IO
 
 
 --
@@ -152,15 +153,15 @@ main = do
   let parseResult =
         execParserPure
           (prefs showHelpOnError)
-          (info (helper <*> parser)
-                (fullDesc <> progDesc "Custom commands"))
+          (info (helper <*> parser) fullDesc)
           args
   case parseResult of
     Success (New name) -> mkNewPost name >>= createNewPost
     Failure failure    -> do
       progname <- getProgName
       let (msg, _) = renderFailure failure progname
-      putStrLn msg
-      putStrLn "\nHAKYLL COMMANDS:"
+      putStrLn "# CUSTOM COMMANDS"
+      hPutStrLn stderr msg
+      putStrLn "\n# HAKYLL COMMANDS"
       hakyll rules
     completionInvoke   -> void $ handleParseResult completionInvoke
