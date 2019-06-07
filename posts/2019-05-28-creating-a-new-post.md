@@ -187,8 +187,8 @@ Success
 
 You: Pfff! That's gonna print the failure of your parser dummy! That's terrible -_-
 
-I: Definatelly, I agree with you. I'm going to create a look for a new approach
-but so far this will work.
+I: Definatelly, I agree with you. I'm going to look for a better approach
+but for now will work.
 
 Thank you for reading.
 
