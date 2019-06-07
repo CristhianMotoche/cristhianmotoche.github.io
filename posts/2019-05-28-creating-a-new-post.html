@@ -77,7 +77,7 @@ Available commands:
 <pre><code>$ stack exec site new-post 'Post name'
 POST GENERATED: posts/2019-05-28-post-name.md</code></pre>
 <p>And that’s going to be the goal of this post.</p>
-<h1 id="approach-1">Approach 1</h1>
+<h1 id="approach-1">Approach #1</h1>
 <p>My first approach was to extend the commands from <code>hakyll</code>, but it seems it’s not currently possible. So, I decided to try <a href="https://hackage.haskell.org/package/optparse-applicative">optparse-applicative</a> and create a command line interface (CLI) on my own. However, I would have had to rewrite a lot of code for the <code>hakyll</code> commands. So, I decided just to add a new command and then use the rest of <code>hakyll</code> commands.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb4-1" title="1"><span class="kw">data</span> <span class="dt">Opts</span> <span class="fu">=</span> <span class="dt">New</span> <span class="dt">String</span> <span class="kw">deriving</span> <span class="dt">Show</span></a></code></pre></div>
 <p>Now, let’s define a <code>Parser</code>:</p>
@@ -90,11 +90,82 @@ POST GENERATED: posts/2019-05-28-post-name.md</code></pre>
 <div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb6-1" title="1"><span class="ot">main ::</span> <span class="dt">IO</span> ()</a>
 <a class="sourceLine" id="cb6-2" title="2">main <span class="fu">=</span> <span class="kw">do</span></a>
 <a class="sourceLine" id="cb6-3" title="3">  args <span class="ot">&lt;-</span> getArgs</a>
-<a class="sourceLine" id="cb6-4" title="4">  <span class="kw">let</span> parseResult <span class="fu">=</span> execParserPure defaultPrefs (info parser fullDesc) args</a>
-<a class="sourceLine" id="cb6-5" title="5">  <span class="kw">case</span> getParseResult parseResult <span class="kw">of</span></a>
-<a class="sourceLine" id="cb6-6" title="6">    <span class="dt">Just</span> (<span class="dt">New</span> name) <span class="ot">-&gt;</span> mkNewPost name <span class="fu">&gt;&gt;=</span> createNewPost</a>
-<a class="sourceLine" id="cb6-7" title="7">    _ <span class="ot">-&gt;</span> hakyll rules</a></code></pre></div>
-<h1 id="to-be-continued-soon-and-in-this-post-sorry-im-a-little-bit-lazy">To be continued… (soon and in this post, sorry I’m a little bit lazy)</h1>
+<a class="sourceLine" id="cb6-4" title="4">  <span class="kw">let</span> parseResult <span class="fu">=</span></a>
+<a class="sourceLine" id="cb6-5" title="5">        execParserPure</a>
+<a class="sourceLine" id="cb6-6" title="6">          (prefs showHelpOnError)</a>
+<a class="sourceLine" id="cb6-7" title="7">          (info (helper <span class="fu">&lt;*&gt;</span> parser) fullDesc)</a>
+<a class="sourceLine" id="cb6-8" title="8">          args</a>
+<a class="sourceLine" id="cb6-9" title="9">  <span class="kw">case</span> parseResult <span class="kw">of</span></a>
+<a class="sourceLine" id="cb6-10" title="10">    <span class="dt">Success</span> (<span class="dt">New</span> name) <span class="ot">-&gt;</span> mkNewPost name <span class="fu">&gt;&gt;=</span> createNewPost</a>
+<a class="sourceLine" id="cb6-11" title="11">    <span class="dt">Failure</span> failure    <span class="ot">-&gt;</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb6-12" title="12">      progname <span class="ot">&lt;-</span> getProgName</a>
+<a class="sourceLine" id="cb6-13" title="13">      <span class="kw">let</span> (msg, _) <span class="fu">=</span> renderFailure failure progname</a>
+<a class="sourceLine" id="cb6-14" title="14">      <span class="fu">putStrLn</span> <span class="st">&quot;# CUSTOM COMMANDS&quot;</span></a>
+<a class="sourceLine" id="cb6-15" title="15">      hPutStrLn stderr msg</a>
+<a class="sourceLine" id="cb6-16" title="16">      <span class="fu">putStrLn</span> <span class="st">&quot;\n# HAKYLL COMMANDS&quot;</span></a>
+<a class="sourceLine" id="cb6-17" title="17">      hakyll rules</a>
+<a class="sourceLine" id="cb6-18" title="18">    completionInvoke   <span class="ot">-&gt;</span> void <span class="fu">$</span> handleParseResult completionInvoke</a></code></pre></div>
+<h1 id="todo-fix-the-reference-types">TODO: FIX THE REFERENCE TYPES:</h1>
+<p><code>execParserPure</code> takes a <code>ParseInfo</code> and returns a <code>ParserResult</code> I simply did pattern matching over that result. If the parsing is successful and parses <code>New name</code> it creates a new post with the current date and the given <code>name</code>. If it fails, it renders the failure, prints some messages to separate the results from my custom commands and the ones from <code>hakyll</code>, redirects the parsing error to <code>stderr</code>, and then executes any <code>hakyll</code> command. Finally, if the parser result is <code>Completition</code>, I delegate <code>handleParseResult</code> to take care of that.</p>
+<p>Now the results:</p>
+<pre><code>$ stack exec site
+
+# CUSTOM COMMANDS
+Missing: COMMAND
+
+Usage: site COMMAND
+
+Available options:
+  -h,--help                Show this help text
+
+Available commands:
+  new                      New post
+
+# HAKYLL COMMANDS
+Missing: COMMAND
+
+Usage: site [-v|--verbose] COMMAND
+  site - Static site compiler created with Hakyll
+
+Available options:
+  -h,--help                Show this help text
+  -v,--verbose             Run in verbose mode
+
+Available commands:
+  build                    Generate the site
+  check                    Validate the site output
+  ...</code></pre>
+<p>Nice! Now, I can do this:</p>
+<pre><code>$ stack exec site new --name &quot;some post&quot;
+$ ls posts/
+...
+2019-06-06-some-post.md</code></pre>
+<p>And if you want to execute the <code>hakyll</code> commands:</p>
+<pre><code>$ stack exec site watch
+CUSTOM COMMANDS
+Invalid argument `watch'
+
+Usage: site COMMAND
+
+Available options:
+  -h,--help                Show this help text
+
+Available commands:
+  new                      New post
+
+HAKYLL COMMANDS
+Listening on http://127.0.0.1:8000
+Initialising...
+  Creating store...
+  Creating provider...
+  Running rules...
+Checking for out-of-date items
+Compiling
+Success</code></pre>
+<p>You: Pfff! That’s gonna print the failure of your parser dummy! That’s terrible -_-</p>
+<p>I: Definatelly, I agree with you. I’m going to create a look for a new approach but so far this will work.</p>
+<p>Thank you for reading.</p>
+<p>ByE!</p>
 
 <div id="disqus_thread"></div>
 <script>
