@@ -108,7 +108,6 @@ main = do
     completionInvoke   -> void $ handleParseResult completionInvoke
 ```
 
-# TODO: FIX THE REFERENCE TYPES:
 `execParserPure` takes a `ParseInfo` and returns a `ParserResult` I simply
 did pattern matching over that result. If the parsing is successful and parses
 `New name` it creates a new post with the current date and the given `name`.
