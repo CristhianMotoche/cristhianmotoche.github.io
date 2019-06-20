@@ -105,7 +105,6 @@ POST GENERATED: posts/2019-05-28-post-name.md</code></pre>
 <a class="sourceLine" id="cb6-16" title="16">      <span class="fu">putStrLn</span> <span class="st">&quot;\n# HAKYLL COMMANDS&quot;</span></a>
 <a class="sourceLine" id="cb6-17" title="17">      hakyll rules</a>
 <a class="sourceLine" id="cb6-18" title="18">    completionInvoke   <span class="ot">-&gt;</span> void <span class="fu">$</span> handleParseResult completionInvoke</a></code></pre></div>
-<h1 id="todo-fix-the-reference-types">TODO: FIX THE REFERENCE TYPES:</h1>
 <p><code>execParserPure</code> takes a <code>ParseInfo</code> and returns a <code>ParserResult</code> I simply did pattern matching over that result. If the parsing is successful and parses <code>New name</code> it creates a new post with the current date and the given <code>name</code>. If it fails, it renders the failure, prints some messages to separate the results from my custom commands and the ones from <code>hakyll</code>, redirects the parsing error to <code>stderr</code>, and then executes any <code>hakyll</code> command. Finally, if the parser result is <code>Completition</code>, I delegate <code>handleParseResult</code> to take care of that.</p>
 <p>Now the results:</p>
 <pre><code>$ stack exec site
