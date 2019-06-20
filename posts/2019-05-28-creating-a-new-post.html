@@ -45,10 +45,10 @@
     
 </div>
 
-<p>Currently, this is the process that I follow to create a new post:</p>
+<p>Currently, this is the process I follow to create a new post:</p>
 <p><img src="../images/create-new-blog/create-new-blog.gif" alt="drawing" width="1000" /></p>
-<p>Yeah, I know, the dates are wrong. I just fixed that, but that’s not the worst. The worst is that I have to do this each time that I want to create a new post. That’s a bummer! I must automate this!</p>
-<p>I’m using <a href="https://hackage.haskell.org/package/hakyll">hakyll</a> to generate static pages for this blog post. This tool provides a <a href="https://hackage.haskell.org/package/hakyll-4.12.5.2/docs/Hakyll-Main.html">set of functions</a> to run the hakyll compiler. I’m using <code>hakyll</code> since it just takes the rules and is ready to go:</p>
+<p>Yeah, I know, the dates are wrong and I just fixed that, but that’s not the worst part. The worst part is that I have to do this each time I want to create a new post. That’s a bummer! I must automate this!</p>
+<p>I’m using <a href="https://hackage.haskell.org/package/hakyll">hakyll</a> to generate static pages for this blog post. This tool provides a <a href="https://hackage.haskell.org/package/hakyll-4.12.5.2/docs/Hakyll-Main.html">set of functions</a> to run the hakyll compiler. The <code>hakyll</code> function takes a set of rules and it’s ready to go:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb1-1" title="1"><span class="ot">main ::</span> <span class="dt">IO</span> ()</a>
 <a class="sourceLine" id="cb1-2" title="2">main <span class="fu">=</span> hakyll rules</a></code></pre></div>
 <p>However, <code>hakyll</code> provides a CLI with a predefined set of commands:</p>
@@ -73,12 +73,12 @@ Available commands:
   server                   Start a preview server
   watch                    Autocompile on changes and start a preview server.
                            You can watch and recompile without running a server</code></pre>
-<p>All of those commands are useful, but I’d love to extend the commands to add a new one that generates a new post. Something like:</p>
+<p>All of those commands are useful, but I’d love to extend the commands with a new one that starts a new post, something like:</p>
 <pre><code>$ stack exec site new-post 'Post name'
-POST GENERATED: posts/2019-05-28-post-name.md</code></pre>
-<p>And that’s going to be the goal of this post.</p>
+POST GENERATED: posts/2019-05-28-Post-name.md</code></pre>
+<p>And that’s the goal of this post!</p>
 <h1 id="approach-1">Approach #1</h1>
-<p>My first approach was to extend the commands from <code>hakyll</code>, but it seems it’s not currently possible. So, I decided to try <a href="https://hackage.haskell.org/package/optparse-applicative">optparse-applicative</a> and create a command line interface (CLI) on my own. However, I would have had to rewrite a lot of code for the <code>hakyll</code> commands. So, I decided just to add a new command and then use the rest of <code>hakyll</code> commands.</p>
+<p>My first approach was to extend the commands from <code>hakyll</code>, but it seems it’s not currently possible. So, I decided to try <a href="https://hackage.haskell.org/package/optparse-applicative">optparse-applicative</a> and create a command line interface (CLI) on my own. However, I would have had to rewrite a lot of code for the <code>hakyll</code> commands. So, I decided to add a new command and then use the rest of <code>hakyll</code> commands:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb4-1" title="1"><span class="kw">data</span> <span class="dt">Opts</span> <span class="fu">=</span> <span class="dt">New</span> <span class="dt">String</span> <span class="kw">deriving</span> <span class="dt">Show</span></a></code></pre></div>
 <p>Now, let’s define a <code>Parser</code>:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb5-1" title="1"><span class="ot">parser ::</span> <span class="dt">Parser</span> <span class="dt">Opts</span></a>
@@ -86,7 +86,7 @@ POST GENERATED: posts/2019-05-28-post-name.md</code></pre>
 <a class="sourceLine" id="cb5-3" title="3">  <span class="dt">New</span> <span class="fu">&lt;$&gt;</span></a>
 <a class="sourceLine" id="cb5-4" title="4">    subparser</a>
 <a class="sourceLine" id="cb5-5" title="5">      (command <span class="st">&quot;new&quot;</span> (info (option str (long <span class="st">&quot;name&quot;</span>)) (progDesc <span class="st">&quot;New post&quot;</span>)))</a></code></pre></div>
-<p>Unfortunately, <code>execParser</code> or <code>customExecParser</code> from <code>optparse-applicative</code> use <a href="https://hackage.haskell.org/package/optparse-applicative-0.14.3.0/docs/src/Options.Applicative.Extra.html#handleParseResult"><code>handleParseResult</code></a> that exits when the command is not in the parser. I don’t want to exit on failure, because on failure I want to attempt <code>hakyll</code> commands. Fortunately, <code>optparse-applicative</code> provides <a href="https://hackage.haskell.org/package/optparse-applicative-0.14.3.0/docs/Options-Applicative.html#v:execParserPure"><code>execParsePure</code></a> so that I can handle the response as I prefer. In this case, I attempted this:</p>
+<p>Unfortunately, <code>execParser</code> or <code>customExecParser</code> from <code>optparse-applicative</code> use <a href="https://hackage.haskell.org/package/optparse-applicative-0.14.3.0/docs/src/Options.Applicative.Extra.html#handleParseResult"><code>handleParseResult</code></a> that exits when the command is not in parsed. I don’t want to exit on failure, because on failure I want to attempt <code>hakyll</code> commands. Fortunately, <code>optparse-applicative</code> provides <a href="https://hackage.haskell.org/package/optparse-applicative-0.14.3.0/docs/Options-Applicative.html#v:execParserPure"><code>execParsePure</code></a> that allows me to handle the parser result as I want. In this case, I attempted this:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb6-1" title="1"><span class="ot">main ::</span> <span class="dt">IO</span> ()</a>
 <a class="sourceLine" id="cb6-2" title="2">main <span class="fu">=</span> <span class="kw">do</span></a>
 <a class="sourceLine" id="cb6-3" title="3">  args <span class="ot">&lt;-</span> getArgs</a>
@@ -105,7 +105,7 @@ POST GENERATED: posts/2019-05-28-post-name.md</code></pre>
 <a class="sourceLine" id="cb6-16" title="16">      <span class="fu">putStrLn</span> <span class="st">&quot;\n# HAKYLL COMMANDS&quot;</span></a>
 <a class="sourceLine" id="cb6-17" title="17">      hakyll rules</a>
 <a class="sourceLine" id="cb6-18" title="18">    completionInvoke   <span class="ot">-&gt;</span> void <span class="fu">$</span> handleParseResult completionInvoke</a></code></pre></div>
-<p><code>execParserPure</code> takes a <code>ParseInfo</code> and returns a <code>ParserResult</code> I simply did pattern matching over that result. If the parsing is successful and parses <code>New name</code> it creates a new post with the current date and the given <code>name</code>. If it fails, it renders the failure, prints some messages to separate the results from my custom commands and the ones from <code>hakyll</code>, redirects the parsing error to <code>stderr</code>, and then executes any <code>hakyll</code> command. Finally, if the parser result is <code>Completition</code>, I delegate <code>handleParseResult</code> to take care of that.</p>
+<p><code>execParserPure</code> returns a <code>ParserResult</code> and I simply pattern matched it. If the parsing is successful and parses <code>New name</code> it creates a new post and creates a basic templace with the current date and a given <code>name</code>. If it fails, it renders the parsing failure, prints some messages to separate the results from my custom commands and the ones from <code>hakyll</code>, redirects the parsing error to <code>stderr</code>, and then executes any <code>hakyll</code> command. Finally, if the parser result is <code>Completition</code>, I delegate <code>handleParseResult</code> to take care of that, because I don’t know what to do with that.</p>
 <p>Now the results:</p>
 <pre><code>$ stack exec site
 
@@ -161,9 +161,9 @@ Initialising...
 Checking for out-of-date items
 Compiling
 Success</code></pre>
-<p>You: Pfff! That’s gonna print the failure of your parser dummy! That’s terrible -_-</p>
-<p>I: Definatelly, I agree with you. I’m going to look for a better approach but for now will work.</p>
-<p>Thank you for reading.</p>
+<p>You are probably thinking: Pfff! That’s gonna print the failure of your parser dummy! That’s terrible -_-</p>
+<p>I’m probably going to say: Definatelly, I agree with you. I’m going to look for a better approach but for now that will work.</p>
+<p>Thanks for reading.</p>
 <p>ByE!</p>
 
 <div id="disqus_thread"></div>
