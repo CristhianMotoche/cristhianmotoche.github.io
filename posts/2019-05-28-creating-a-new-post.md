@@ -1,7 +1,7 @@
 ---
 title: Steps to create a new post. What a bummer!
-date: 2019-05-28 00:00:00
-tags: en, things, pending
+date: 2019-06-28 00:00:00
+tags: en, haskell
 description: As a programmer, I know that I need to automate this.
 ---
 
