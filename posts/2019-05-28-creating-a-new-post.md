@@ -5,17 +5,17 @@ tags: en, things, pending
 description: As a programmer, I know that I need to automate this.
 ---
 
-Currently, this is the process that I follow to create a new post:
+Currently, this is the process I follow to create a new post:
 
 <img src="/images/create-new-blog/create-new-blog.gif" alt="drawing" width="1000"/>
 
-Yeah, I know, the dates are wrong. I just fixed that, but that's not the worst.
-The worst is that I have to do this each time that I want to create a new post.
+Yeah, I know, the dates are wrong and I just fixed that, but that's not the worst part.
+The worst part is that I have to do this each time I want to create a new post.
 That's a bummer! I must automate this!
 
 I'm using [hakyll][hakyll] to generate static pages for this blog post.
 This tool provides a [set of functions][hakyll-main] to run the hakyll compiler.
-I'm using `hakyll` since it just takes the rules and is ready to go:
+The `hakyll` function takes a set of rules and it's ready to go:
 
 ```haskell
 main :: IO ()
@@ -48,23 +48,23 @@ Available commands:
                            You can watch and recompile without running a server
 ```
 
-All of those commands are useful, but I'd love to extend the commands to add a new
-one that generates a new post. Something like:
+All of those commands are useful, but I'd love to extend the commands with a new
+one that starts a new post, something like:
 
 ```
 $ stack exec site new-post 'Post name'
-POST GENERATED: posts/2019-05-28-post-name.md
+POST GENERATED: posts/2019-05-28-Post-name.md
 ```
 
-And that's going to be the goal of this post.
+And that's the goal of this post!
 
 # Approach #1
 
 My first approach was to extend the commands from `hakyll`, but it seems it's
 not currently possible. So, I decided to try [optparse-applicative][optparse-applicative]
 and create a command line interface (CLI) on my own. However, I would have had
-to rewrite a lot of code for the `hakyll` commands. So, I decided just to add a
-new command and then use the rest of `hakyll` commands.
+to rewrite a lot of code for the `hakyll` commands. So, I decided to add a
+new command and then use the rest of `hakyll` commands:
 
 ```haskell
 data Opts = New String deriving Show
@@ -82,10 +82,10 @@ parser =
 
 Unfortunately, `execParser` or `customExecParser` from
 `optparse-applicative` use [`handleParseResult`][handleParseResult]
-that exits when the command is not in the parser. I don't want to exit
+that exits when the command is not in parsed. I don't want to exit
 on failure, because on failure I want to attempt `hakyll` commands. Fortunately,
-`optparse-applicative` provides [`execParsePure`][execParsePure] so that I
-can handle the response as I prefer. In this case, I attempted this:
+`optparse-applicative` provides [`execParsePure`][execParsePure] that allows me
+to handle the parser result as I want. In this case, I attempted this:
 
 ```haskell
 main :: IO ()
@@ -108,14 +108,14 @@ main = do
     completionInvoke   -> void $ handleParseResult completionInvoke
 ```
 
-`execParserPure` takes a `ParseInfo` and returns a `ParserResult` I simply
-did pattern matching over that result. If the parsing is successful and parses
-`New name` it creates a new post with the current date and the given `name`.
-If it fails, it renders the failure, prints some messages to separate the
+`execParserPure` returns a `ParserResult` and I simply pattern matched it.
+If the parsing is successful and parses `New name` it creates a new post and
+creates a basic templace with the current date and a given `name`.
+If it fails, it renders the parsing failure, prints some messages to separate the
 results from my custom commands and the ones from `hakyll`,
 redirects the parsing error to `stderr`, and then executes any `hakyll` command.
 Finally, if the parser result is `Completition`, I delegate `handleParseResult`
-to take care of that.
+to take care of that, because I don't know what to do with that.
 
 Now the results:
 
@@ -184,12 +184,12 @@ Compiling
 Success
 ```
 
-You: Pfff! That's gonna print the failure of your parser dummy! That's terrible -_-
+You are probably thinking: Pfff! That's gonna print the failure of your parser dummy! That's terrible -_-
 
-I: Definatelly, I agree with you. I'm going to look for a better approach
-but for now will work.
+I'm probably going to say: Definatelly, I agree with you. I'm going to look for a better approach
+but for now that will work.
 
-Thank you for reading.
+Thanks for reading.
 
 ByE!
 
