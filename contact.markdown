@@ -2,12 +2,12 @@
 title: About
 ---
 
-I'm a Systems Engineering student from Quito, Ecuador. I started this blog post page
-to improve my writting skills, and because I want to share what I know with you.
-I will be adding some blog posts ocassionally. Perhaps I will write something
-interesting for you, so be careful.
+I'm a Software Developer from Quito, Ecuador. I started this blog post page
+to improve my writting skills, and because I wanted to share what I know.
+I will be adding some blog posts ocassionally. I may write something
+interesting, so be careful.
 
-You can find me:
+You can find me at:
 
 **Twitter**:
 
@@ -17,7 +17,7 @@ You can find me:
 
 [CristhianMotoche](https://github.com/CristhianMotoche){ class=github-button data-style=mega }
 
-**Mails**:
+E-**Mails**:
 
 - Gmail: [cristhian.motoche@gmail.com](mailto:cristhian.motoche@gmail.com)
 
