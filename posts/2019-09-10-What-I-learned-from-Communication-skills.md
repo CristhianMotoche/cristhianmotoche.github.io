@@ -11,7 +11,7 @@ or readings about it. I found this [YouTube playlist][yt-playlist] and I think
 it's a good start.
 
 # Development of the course
-## 01. Introduction
+## Introduction
 In the first video, Richard Garnett compares communication with baseball. There
 are some bases that you need to go around before getting into the speking part:
 
@@ -40,10 +40,11 @@ and we should start working on fixing that. For example, if you want to be
 better at understanding, you can do a `10/90` conversation. You talk only a 10%
 and the other person talks 90%.
 
-## 02. Barriers of effective communication
-To be continued...
+After looking at the first video, I was really exited to learn more from the rest
+of videos. However, I couldn't find the rest of the videos. It seems the site
+where they were uploaded was closed.
 
 # Conclusion
-Pending!!!
+Make sure to look for a complete source of information next time!
 
 [yt-playlist]: https://www.youtube.com/watch?v=Defi1QUtOmc&list=PLp3gi_j1d-StnS20vjgqBkvaP8gGIJObd
