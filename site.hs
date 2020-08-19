@@ -6,6 +6,7 @@ import           Data.Monoid             (mappend)
 import           Data.String.Interpolate
 import           Data.Time
 import           Hakyll
+import           Hakyll.Web.Sass
 import           Options.Applicative
 import           System.Directory
 import           System.Environment
@@ -14,7 +15,8 @@ import           System.IO
 
 
 --
-data Opts = New String deriving Show
+data Opts = New String
+    deriving Show
 
 
 -- |
@@ -24,7 +26,11 @@ parser =
     (command "new" (info (option str (long "name")) (progDesc "New post")))
 
 -- |
-data Post = Post { name :: String, date :: UTCTime } deriving Show
+data Post = Post
+    { name :: String
+    , date :: UTCTime
+    }
+    deriving Show
 
 mkNewPost :: String -> IO Post
 mkNewPost name_ = Post name_ <$> getCurrentTime
@@ -67,6 +73,11 @@ rules = do
     match "css/*" $ do
         route   idRoute
         compile compressCssCompiler
+
+    scssDependency <- makePatternDependency "assets/**/*.scss"
+    rulesExtraDependencies [scssDependency] $ match "assets/styles/app.scss" $ do
+        route $ setExtension "css"
+        compile (fmap compressCss <$> sassCompiler)
 
     match (fromList ["contact.markdown"]) $ do
         route   $ setExtension "html"
