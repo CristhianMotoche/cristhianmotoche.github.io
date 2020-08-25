@@ -171,7 +171,7 @@
 <a class="sourceLine" id="cb7-8" title="8">       <span class="dt">Left</span> str <span class="ot">-&gt;</span> <span class="fu">putStrLn</span> <span class="fu">$</span> <span class="st">&quot;Error: &quot;</span> <span class="fu">++</span> str</a>
 <a class="sourceLine" id="cb7-9" title="9">       <span class="dt">Right</span> dat <span class="ot">-&gt;</span> <span class="fu">print</span> dat</a></code></pre></div>
 <p>Running this code, will print the parsed JSON in the console. If we change something in the expected content, we’ll get an error message.</p>
-<p>Let’s access to the properties of the parsed content. From the code above, I’m going to access the <code>data</code> property of <code>content</code> and pass that to a function <code>printCardInfo</code> that expects a <code>Card</code> object:</p>
+<p>Let’s access to the properties of the parsed content. From the code above, I’m going to access the <code>data</code> property of the <code>dat</code> object and pass it to the function <code>printCardInfo</code> that expects a <code>Card</code> object:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb8-1" title="1">       <span class="dt">Right</span> dat <span class="ot">-&gt;</span> <span class="fu">mapM_</span> printCardInfo [get| dat.data[] |]</a></code></pre></div>
 <p>Now, <code>printCardInfo</code> has more data accessors:</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb9-1" title="1"></a>
