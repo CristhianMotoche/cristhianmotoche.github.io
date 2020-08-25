@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="description" content="A blog page for people who is interested in programming.">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>CAMM Blog</title>
+    <link rel="icon" type="image/png" href="../images/devi.png">
+    <link href="../assets/styles/app.css" rel="stylesheet">
+    <meta name="google-site-verification" content="ZE7UdJw8EgIGYT1wlPQ1IDRaqOa9IseKmfw4ufHxEAk" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body class="body">
+    <div class="body__container">
+      <div class="logo">
+        <h1 class="logo__title">
+          <a class="logo__link" href="../">Camm Blog Page</a>
+        </h1>
+      </div>
+      <nav class="navbar">
+        <ul class="nav-list">
+          <li class="nav-list__item">
+            <a class="nav-list__link" href="../">Home</a>
+          </li>
+          <li class="nav-list__item">
+            <a class="nav-list__link" href="../contact.html">About</a>
+          </li>
+          <li class="nav-list__item">
+            <a class="nav-list__link" href="../archive.html">Archive</a>
+          </li>
+        </ul>
+      </nav>
+      <div class="content">
+        <h1 class="content__title">Trying aeson-schemas</h1>
+        <div class="content_body">
+          <link href="../css/hk-pyg.css" rel="stylesheet">
+<link href="../css/tables.css" rel="stylesheet">
+<div class="info">
+    Posted on August 18, 2020
+    
+</div>
+<div class="info">
+    
+    Tags: <a href="../tags/haskell.html">haskell</a>
+    
+</div>
+
+<p>A few weeks ago, Brandon Chinn presented a talk about <a href="https://hackage.haskell.org/package/aeson-schemas">aeson-schemas</a>. You can see the talk <a href="https://www.youtube.com/watch?v=vJQtEa_7O3Q">here</a>. It was cool to see some type level programming applied to a really common task: parse JSON.</p>
+<p>So, I decided to give it a try and write some code. As suggested, by Vitaly Bragilevsky in his <a href="https://www.youtube.com/watch?v=n3H_YipBDrY">talk</a>:</p>
+<blockquote>
+<p><em>Always, always, always write your own code.</em></p>
+</blockquote>
+<p>And that’s what I’ll do here! (the code snippets are <a href="https://github.com/CristhianMotoche/as-test-ygo">here</a>).</p>
+<p>The problem is dead simple! I’m going to parse and process the JSON of one of my <a href="https://db.ygoprodeck.com/card/?search=Time%20Wizard">favorite</a> cards in Yu Gi Oh! and I’m going to use the <a href="https://db.ygoprodeck.com/api-guide/">Yu Gi Oh! Pro API</a>.</p>
+<p>Here is the JSON representation:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode json"><code class="sourceCode json"><a class="sourceLine" id="cb1-1" title="1"><span class="fu">{</span></a>
+<a class="sourceLine" id="cb1-2" title="2">  <span class="dt">&quot;data&quot;</span><span class="fu">:</span> <span class="ot">[</span></a>
+<a class="sourceLine" id="cb1-3" title="3">  <span class="fu">{</span></a>
+<a class="sourceLine" id="cb1-4" title="4">    <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="dv">71625222</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb1-5" title="5">      <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;Time Wizard&quot;</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb1-6" title="6">      <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;Effect Monster&quot;</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb1-7" title="7">      <span class="dt">&quot;desc&quot;</span><span class="fu">:</span> <span class="st">&quot;Once per turn: You can toss a coin and call it. If you call it right, ...&quot;</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb1-8" title="8">      <span class="dt">&quot;atk&quot;</span><span class="fu">:</span> <span class="dv">500</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb1-9" title="9">      <span class="dt">&quot;def&quot;</span><span class="fu">:</span> <span class="dv">400</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb1-10" title="10">      <span class="dt">&quot;level&quot;</span><span class="fu">:</span> <span class="dv">2</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb1-11" title="11">      <span class="dt">&quot;race&quot;</span><span class="fu">:</span> <span class="st">&quot;Spellcaster&quot;</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb1-12" title="12">      <span class="dt">&quot;attribute&quot;</span><span class="fu">:</span> <span class="st">&quot;LIGHT&quot;</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb1-13" title="13">      <span class="dt">&quot;archetype&quot;</span><span class="fu">:</span> <span class="st">&quot;Magician&quot;</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb1-14" title="14">      <span class="dt">&quot;card_sets&quot;</span><span class="fu">:</span> <span class="ot">[</span></a>
+<a class="sourceLine" id="cb1-15" title="15">        <span class="fu">{</span></a>
+<a class="sourceLine" id="cb1-16" title="16">          <span class="dt">&quot;set_name&quot;</span><span class="fu">:</span> <span class="st">&quot;Starter Deck: Joey&quot;</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb1-17" title="17">          <span class="dt">&quot;set_code&quot;</span><span class="fu">:</span> <span class="st">&quot;SDJ-015&quot;</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb1-18" title="18">          <span class="dt">&quot;set_rarity&quot;</span><span class="fu">:</span> <span class="st">&quot;Common&quot;</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb1-19" title="19">          <span class="dt">&quot;set_rarity_code&quot;</span><span class="fu">:</span> <span class="st">&quot;(C)&quot;</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb1-20" title="20">          <span class="dt">&quot;set_price&quot;</span><span class="fu">:</span> <span class="st">&quot;1.14&quot;</span></a>
+<a class="sourceLine" id="cb1-21" title="21">        <span class="fu">}</span></a>
+<a class="sourceLine" id="cb1-22" title="22">      <span class="ot">]</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb1-23" title="23">      <span class="dt">&quot;card_images&quot;</span><span class="fu">:</span> <span class="ot">[</span></a>
+<a class="sourceLine" id="cb1-24" title="24">        <span class="fu">{</span></a>
+<a class="sourceLine" id="cb1-25" title="25">          <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="dv">71625222</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb1-26" title="26">          <span class="dt">&quot;image_url&quot;</span><span class="fu">:</span> <span class="st">&quot;https:</span><span class="ch">\/\/</span><span class="st">storage.googleapis.com</span><span class="ch">\/</span><span class="st">ygoprodeck.com</span><span class="ch">\/</span><span class="st">pics</span><span class="ch">\/</span><span class="st">71625222.jpg&quot;</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb1-27" title="27">          <span class="dt">&quot;image_url_small&quot;</span><span class="fu">:</span> <span class="st">&quot;https:</span><span class="ch">\/\/</span><span class="st">storage.googleapis.com</span><span class="ch">\/</span><span class="st">ygoprodeck.com</span><span class="ch">\/</span><span class="st">pics_small</span><span class="ch">\/</span><span class="st">71625222.jpg&quot;</span></a>
+<a class="sourceLine" id="cb1-28" title="28"></a>
+<a class="sourceLine" id="cb1-29" title="29">        <span class="fu">}</span></a>
+<a class="sourceLine" id="cb1-30" title="30">      <span class="ot">]</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb1-31" title="31">      <span class="dt">&quot;card_prices&quot;</span><span class="fu">:</span> <span class="ot">[</span></a>
+<a class="sourceLine" id="cb1-32" title="32">        <span class="fu">{</span></a>
+<a class="sourceLine" id="cb1-33" title="33">          <span class="dt">&quot;cardmarket_price&quot;</span><span class="fu">:</span> <span class="st">&quot;0.12&quot;</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb1-34" title="34">          <span class="dt">&quot;tcgplayer_price&quot;</span><span class="fu">:</span> <span class="st">&quot;0.22&quot;</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb1-35" title="35">          <span class="dt">&quot;ebay_price&quot;</span><span class="fu">:</span> <span class="st">&quot;3.95&quot;</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb1-36" title="36">          <span class="dt">&quot;amazon_price&quot;</span><span class="fu">:</span> <span class="st">&quot;2.11&quot;</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb1-37" title="37">          <span class="dt">&quot;coolstuffinc_price&quot;</span><span class="fu">:</span> <span class="kw">null</span></a>
+<a class="sourceLine" id="cb1-38" title="38">        <span class="fu">}</span></a>
+<a class="sourceLine" id="cb1-39" title="39">      <span class="ot">]</span></a>
+<a class="sourceLine" id="cb1-40" title="40">    <span class="fu">}</span></a>
+<a class="sourceLine" id="cb1-41" title="41">  <span class="ot">]</span></a>
+<a class="sourceLine" id="cb1-42" title="42"><span class="fu">}</span></a></code></pre></div>
+<p>As you can see, the JSON is kind of nested and <em>aeson-schemas</em> promisses to be helpful in this situations. Let’s see id that’s true.</p>
+<p>First, you’ll need to add the following extensions:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb2-1" title="1"><span class="ot">{-# LANGUAGE DataKinds         #-}</span></a>
+<a class="sourceLine" id="cb2-2" title="2"><span class="ot">{-# LANGUAGE OverloadedStrings #-}</span></a>
+<a class="sourceLine" id="cb2-3" title="3"><span class="ot">{-# LANGUAGE QuasiQuotes       #-}</span></a>
+<a class="sourceLine" id="cb2-4" title="4"><span class="ot">{-# LANGUAGE TypeApplications  #-}</span></a></code></pre></div>
+<p>and import these libraries:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb3-1" title="1"></a>
+<a class="sourceLine" id="cb3-2" title="2"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Aeson</span>           <span class="kw">as</span> <span class="dt">A</span></a>
+<a class="sourceLine" id="cb3-3" title="3"><span class="kw">import</span>           <span class="dt">Data.Aeson.Schema</span>    (<span class="dt">Object</span>, get, schema)</a>
+<a class="sourceLine" id="cb3-4" title="4"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.ByteString.Lazy</span> <span class="kw">as</span> <span class="dt">BS</span></a>
+<a class="sourceLine" id="cb3-5" title="5"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Text.IO</span>         <span class="kw">as</span> <span class="dt">T</span></a></code></pre></div>
+<p>Now, let’s define the first schema:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb4-1" title="1"><span class="kw">type</span> <span class="dt">Data</span> <span class="fu">=</span> [schema|</a>
+<a class="sourceLine" id="cb4-2" title="2">  {</a>
+<a class="sourceLine" id="cb4-3" title="3">    data: List #Card</a>
+<a class="sourceLine" id="cb4-4" title="4">  }</a>
+<a class="sourceLine" id="cb4-5" title="5">|]</a></code></pre></div>
+<p><code>Data</code> is just a wrapper for a list of card. In this simple example, we’re just expecting one type of card, so it’s not necessary to define all the types of possible schemas that we could get from the API.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb5-1" title="1"><span class="kw">type</span> <span class="dt">Card</span> <span class="fu">=</span> [schema|</a>
+<a class="sourceLine" id="cb5-2" title="2">  {</a>
+<a class="sourceLine" id="cb5-3" title="3">    id: Int,</a>
+<a class="sourceLine" id="cb5-4" title="4">    name: Text,</a>
+<a class="sourceLine" id="cb5-5" title="5">    type: Text,</a>
+<a class="sourceLine" id="cb5-6" title="6">    desc: Text,</a>
+<a class="sourceLine" id="cb5-7" title="7">    atk: Int,</a>
+<a class="sourceLine" id="cb5-8" title="8">    def: Int,</a>
+<a class="sourceLine" id="cb5-9" title="9">    level: Int,</a>
+<a class="sourceLine" id="cb5-10" title="10">    race: Text,</a>
+<a class="sourceLine" id="cb5-11" title="11">    attribute: Text,</a>
+<a class="sourceLine" id="cb5-12" title="12">    archetype: Text,</a>
+<a class="sourceLine" id="cb5-13" title="13">    card_sets: List #CardSet,</a>
+<a class="sourceLine" id="cb5-14" title="14">    card_images: List #CardImage,</a>
+<a class="sourceLine" id="cb5-15" title="15">    card_prices: List #CardPrice,</a>
+<a class="sourceLine" id="cb5-16" title="16">  }</a>
+<a class="sourceLine" id="cb5-17" title="17">|]</a></code></pre></div>
+<p><code>Card</code> is a simple struture with some simple types <code>Int</code>, <code>Text</code>, and <code>List</code>s.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb6-1" title="1"><span class="kw">type</span> <span class="dt">CardSet</span> <span class="fu">=</span> [schema|</a>
+<a class="sourceLine" id="cb6-2" title="2">  {</a>
+<a class="sourceLine" id="cb6-3" title="3">    set_name: Text,</a>
+<a class="sourceLine" id="cb6-4" title="4">    set_code: Text,</a>
+<a class="sourceLine" id="cb6-5" title="5">    set_rarity: Text,</a>
+<a class="sourceLine" id="cb6-6" title="6">    set_rarity_code: Text,</a>
+<a class="sourceLine" id="cb6-7" title="7">    set_price: Text,</a>
+<a class="sourceLine" id="cb6-8" title="8">  }</a>
+<a class="sourceLine" id="cb6-9" title="9">|]</a>
+<a class="sourceLine" id="cb6-10" title="10"></a>
+<a class="sourceLine" id="cb6-11" title="11"><span class="kw">type</span> <span class="dt">CardImage</span> <span class="fu">=</span> [schema|</a>
+<a class="sourceLine" id="cb6-12" title="12">  {</a>
+<a class="sourceLine" id="cb6-13" title="13">    id: Int,</a>
+<a class="sourceLine" id="cb6-14" title="14">    image_url: Text,</a>
+<a class="sourceLine" id="cb6-15" title="15">    image_url_small: Text,</a>
+<a class="sourceLine" id="cb6-16" title="16">  }</a>
+<a class="sourceLine" id="cb6-17" title="17">|]</a>
+<a class="sourceLine" id="cb6-18" title="18"></a>
+<a class="sourceLine" id="cb6-19" title="19"><span class="kw">type</span> <span class="dt">CardPrice</span> <span class="fu">=</span> [schema|</a>
+<a class="sourceLine" id="cb6-20" title="20">  {</a>
+<a class="sourceLine" id="cb6-21" title="21">    cardmarket_price: Text,</a>
+<a class="sourceLine" id="cb6-22" title="22">    tcgplayer_price: Text,</a>
+<a class="sourceLine" id="cb6-23" title="23">    ebay_price: Text,</a>
+<a class="sourceLine" id="cb6-24" title="24">    amazon_price: Text,</a>
+<a class="sourceLine" id="cb6-25" title="25">    coolstuffinc_price: Maybe Text,</a>
+<a class="sourceLine" id="cb6-26" title="26">  }</a>
+<a class="sourceLine" id="cb6-27" title="27">|]</a></code></pre></div>
+<p>As you can see, <code>CardSet</code>, <code>CardImage</code>, and <code>CardPrice</code> are simple strucures, too.</p>
+<p>Now, let’s parse it:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb7-1" title="1"><span class="ot">main ::</span> <span class="dt">IO</span> ()</a>
+<a class="sourceLine" id="cb7-2" title="2">main <span class="fu">=</span></a>
+<a class="sourceLine" id="cb7-3" title="3">  <span class="kw">let</span><span class="ot"> decodeStr ::</span> <span class="dt">BS.ByteString</span> <span class="ot">-&gt;</span> <span class="dt">Either</span> <span class="dt">String</span> (<span class="dt">Object</span> <span class="dt">Data</span>)</a>
+<a class="sourceLine" id="cb7-4" title="4">      decodeStr <span class="fu">=</span> A.eitherDecode</a>
+<a class="sourceLine" id="cb7-5" title="5">   <span class="kw">in</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb7-6" title="6">     eData <span class="ot">&lt;-</span> decodeStr <span class="fu">&lt;$&gt;</span> BS.readFile <span class="st">&quot;time-wizard.json&quot;</span></a>
+<a class="sourceLine" id="cb7-7" title="7">     <span class="kw">case</span> eData <span class="kw">of</span></a>
+<a class="sourceLine" id="cb7-8" title="8">       <span class="dt">Left</span> str <span class="ot">-&gt;</span> <span class="fu">putStrLn</span> <span class="fu">$</span> <span class="st">&quot;Error: &quot;</span> <span class="fu">++</span> str</a>
+<a class="sourceLine" id="cb7-9" title="9">       <span class="dt">Right</span> dat <span class="ot">-&gt;</span> <span class="fu">print</span> dat</a></code></pre></div>
+<p>Running this code, will print the parsed JSON in the console. If we change something in the expected content, we’ll get an error message.</p>
+<p>Let’s access to the properties of the parsed content. From the code above, I’m going to access the <code>data</code> property of <code>content</code> and pass that to a function <code>printCardInfo</code> that expects a <code>Card</code> object:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb8-1" title="1">       <span class="dt">Right</span> dat <span class="ot">-&gt;</span> <span class="fu">mapM_</span> printCardInfo [get| dat.data[] |]</a></code></pre></div>
+<p>Now, <code>printCardInfo</code> has more data accessors:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb9-1" title="1"></a>
+<a class="sourceLine" id="cb9-2" title="2"><span class="ot">printCardInfo ::</span> <span class="dt">Object</span> <span class="dt">Card</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()</a>
+<a class="sourceLine" id="cb9-3" title="3">printCardInfo card <span class="fu">=</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb9-4" title="4">  <span class="fu">putStrLn</span> <span class="fu">$</span> <span class="st">&quot;id: &quot;</span> <span class="fu">++</span> <span class="fu">show</span> [get| card.id |]</a>
+<a class="sourceLine" id="cb9-5" title="5">  <span class="fu">putStrLn</span> <span class="fu">$</span> <span class="st">&quot;name: &quot;</span> <span class="fu">++</span> <span class="fu">show</span> [get| card.name |]</a>
+<a class="sourceLine" id="cb9-6" title="6">  <span class="fu">putStrLn</span> <span class="fu">$</span> <span class="fu">mconcat</span> [</a>
+<a class="sourceLine" id="cb9-7" title="7">    <span class="st">&quot;atk: &quot;</span>, <span class="fu">show</span> [get| card.atk |], <span class="st">&quot; &quot;</span>,</a>
+<a class="sourceLine" id="cb9-8" title="8">    <span class="st">&quot;def: &quot;</span>, <span class="fu">show</span> [get| card.def |]</a>
+<a class="sourceLine" id="cb9-9" title="9">    ]</a>
+<a class="sourceLine" id="cb9-10" title="10">  T.putStrLn <span class="fu">$</span> <span class="fu">mconcat</span> <span class="fu">$</span></a>
+<a class="sourceLine" id="cb9-11" title="11">    [<span class="st">&quot;Small image url: &quot;</span>] <span class="fu">++</span> [get| card.card_images[].image_url_small |]</a>
+<a class="sourceLine" id="cb9-12" title="12">  <span class="fu">putStrLn</span> <span class="fu">$</span></a>
+<a class="sourceLine" id="cb9-13" title="13">    <span class="st">&quot;Price In Coolstuff.inc: &quot;</span> <span class="fu">++</span> <span class="fu">show</span> [get| card.card_prices[].coolstuffinc_price |]</a></code></pre></div>
+<p>There are two important accessors to mention here:</p>
+<ul>
+<li><code>[get| card.def |]</code> that access the property <code>def</code> of <code>card</code></li>
+<li><code>[get| card.card_images[].image_url_small |]</code> that access the property <code>image_url_small</code> of all the <code>card_images</code></li>
+</ul>
+<p>There are more interesting data accessors that you’ll find in the library (e.g. <code>?</code> to work with optional data).</p>
+<p>Now, here’s where it comes really interesting. What would happen if we change <code>name</code> with <code>first_name</code> in the data accessor? Well, the answer is simple: the code <strong>won’t</strong> compile!</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode py"><code class="sourceCode python"><a class="sourceLine" id="cb10-1" title="1">    • Key <span class="st">'first_name'</span> does <span class="kw">not</span> exist <span class="kw">in</span> the following schema:</a>
+<a class="sourceLine" id="cb10-2" title="2">      <span class="co">'[ '</span>( <span class="st">'Data.Aeson.Schema.Internal.NormalKey &quot;id&quot;,</span></a>
+<a class="sourceLine" id="cb10-3" title="3"><span class="st">            '</span>Data.Aeson.Schema.Internal.SchemaInt),</a>
+<a class="sourceLine" id="cb10-4" title="4">         <span class="co">'( '</span>Data.Aeson.Schema.Internal.NormalKey <span class="st">&quot;name&quot;</span>,</a>
+<a class="sourceLine" id="cb10-5" title="5">            <span class="co">'Data.Aeson.Schema.Internal.SchemaText),</span></a>
+<a class="sourceLine" id="cb10-6" title="6"><span class="co">         '</span>( <span class="st">'Data.Aeson.Schema.Internal.NormalKey &quot;type&quot;,</span></a></code></pre></div>
+<p>Cool, right? And the error message is quite explanatory.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>aeson-schemas is a type safe library that helps us to parse JSON and access its properties. If we misspell or use the incorrect syntax to access a property we’ll get a compilation error, which is much better than an error at runtime!</p>
+<p>So, give it a look, I’m sure you’ll find it interesting.</p>
+<p>That’s all for now. Thanks for reading!</p>
+<p>ByE!</p>
+
+<div id="disqus_thread"></div>
+<script>
+/**
+ *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+ *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+ */
+/*
+   var disqus_config = function () {
+   this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+   this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+   };
+ */
+(function() {  // DON'T EDIT BELOW THIS LINE
+ var d = document, s = d.createElement('script');
+
+ s.src = '//cristhianmotochegithubio.disqus.com/embed.js';
+
+ s.setAttribute('data-timestamp', +new Date());
+ (d.head || d.body).appendChild(s);
+ })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+        </div>
+      </div>
+      <footer class="footer">
+        <p class="footer__hakyll">Site proudly generated by: <a href="http://jaspervdj.be/hakyll">Hakyll</a></p>
+        <a class="footer__license" rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">CAMM Blog</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Cristhian Alberto Motoche Macas</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
+      </footer>
+    </div>
+    <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-86039843-1', 'auto');
+    ga('send', 'pageview');
+    </script>
+  </body>
+</html>
