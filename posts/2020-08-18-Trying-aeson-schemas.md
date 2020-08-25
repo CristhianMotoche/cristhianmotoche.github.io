@@ -177,8 +177,8 @@ Running this code, will print the parsed JSON in the console. If we change
 something in the expected content, we'll get an error message.
 
 Let's access to the properties of the parsed content. From the code above,
-I'm going to access the `data` property of `content` and pass that to a function
-`printCardInfo` that expects a `Card` object:
+I'm going to access the `data` property of the `dat` object and pass it to the
+function `printCardInfo` that expects a `Card` object:
 
 ```haskell
        Right dat -> mapM_ printCardInfo [get| dat.data[] |]
