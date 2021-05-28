@@ -70,7 +70,7 @@ Here is the JSON representation:
 ```
 
 As you can see, the JSON is kind of nested and _aeson-schemas_ promisses to be
-helpful in this situations. Let's see id that's true.
+helpful in this situations. Let's see if that's true.
 
 First, you'll need to add the following extensions:
 
