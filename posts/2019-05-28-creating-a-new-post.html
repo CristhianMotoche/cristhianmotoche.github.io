@@ -41,16 +41,20 @@
 </div>
 <div class="info">
     
-    Tags: <a href="../tags/en.html">en</a>, <a href="../tags/haskell.html">haskell</a>
+    Tags: <a title="All pages tagged 'en'." href="../tags/en.html" rel="tag">en</a>, <a title="All pages tagged 'haskell'." href="../tags/haskell.html" rel="tag">haskell</a>
     
 </div>
 
 <p>Currently, this is the process I follow to create a new post:</p>
 <p><img src="../images/create-new-blog/create-new-blog.gif" alt="drawing" width="1000" /></p>
-<p>Yeah, I know, the dates are wrong and I just fixed that, but that’s not the worst part. The worst part is that I have to do this each time I want to create a new post. That’s a bummer! I must automate this!</p>
-<p>I’m using <a href="https://hackage.haskell.org/package/hakyll">hakyll</a> to generate static pages for this blog post. This tool provides a <a href="https://hackage.haskell.org/package/hakyll-4.12.5.2/docs/Hakyll-Main.html">set of functions</a> to run the hakyll compiler. The <code>hakyll</code> function takes a set of rules and it’s ready to go:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb1-1" title="1"><span class="ot">main ::</span> <span class="dt">IO</span> ()</a>
-<a class="sourceLine" id="cb1-2" title="2">main <span class="fu">=</span> hakyll rules</a></code></pre></div>
+<p>Yeah, I know, the dates are wrong and I just fixed that, but that’s not the worst part.
+The worst part is that I have to do this each time I want to create a new post.
+That’s a bummer! I must automate this!</p>
+<p>I’m using <a href="https://hackage.haskell.org/package/hakyll">hakyll</a> to generate static pages for this blog post.
+This tool provides a <a href="https://hackage.haskell.org/package/hakyll-4.12.5.2/docs/Hakyll-Main.html">set of functions</a> to run the hakyll compiler.
+The <code>hakyll</code> function takes a set of rules and it’s ready to go:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ot">main ::</span> <span class="dt">IO</span> ()</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> hakyll rules</span></code></pre></div>
 <p>However, <code>hakyll</code> provides a CLI with a predefined set of commands:</p>
 <pre><code>$ stack exec site
 
@@ -73,39 +77,56 @@ Available commands:
   server                   Start a preview server
   watch                    Autocompile on changes and start a preview server.
                            You can watch and recompile without running a server</code></pre>
-<p>All of those commands are useful, but I’d love to extend the commands with a new one that starts a new post, something like:</p>
+<p>All of those commands are useful, but I’d love to extend the commands with a new
+one that starts a new post, something like:</p>
 <pre><code>$ stack exec site new-post 'Post name'
 POST GENERATED: posts/2019-05-28-Post-name.md</code></pre>
 <p>And that’s the goal of this post!</p>
 <h1 id="approach-1">Approach #1</h1>
-<p>My first approach was to extend the commands from <code>hakyll</code>, but it seems it’s not currently possible. So, I decided to try <a href="https://hackage.haskell.org/package/optparse-applicative">optparse-applicative</a> and create a command line interface (CLI) on my own. However, I would have had to rewrite a lot of code for the <code>hakyll</code> commands. So, I decided to add a new command and then use the rest of <code>hakyll</code> commands:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb4-1" title="1"><span class="kw">data</span> <span class="dt">Opts</span> <span class="fu">=</span> <span class="dt">New</span> <span class="dt">String</span> <span class="kw">deriving</span> <span class="dt">Show</span></a></code></pre></div>
+<p>My first approach was to extend the commands from <code>hakyll</code>, but it seems it’s
+not currently possible. So, I decided to try <a href="https://hackage.haskell.org/package/optparse-applicative">optparse-applicative</a>
+and create a command line interface (CLI) on my own. However, I would have had
+to rewrite a lot of code for the <code>hakyll</code> commands. So, I decided to add a
+new command and then use the rest of <code>hakyll</code> commands:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Opts</span> <span class="ot">=</span> <span class="dt">New</span> <span class="dt">String</span> <span class="kw">deriving</span> <span class="dt">Show</span></span></code></pre></div>
 <p>Now, let’s define a <code>Parser</code>:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb5-1" title="1"><span class="ot">parser ::</span> <span class="dt">Parser</span> <span class="dt">Opts</span></a>
-<a class="sourceLine" id="cb5-2" title="2">parser <span class="fu">=</span></a>
-<a class="sourceLine" id="cb5-3" title="3">  <span class="dt">New</span> <span class="fu">&lt;$&gt;</span></a>
-<a class="sourceLine" id="cb5-4" title="4">    subparser</a>
-<a class="sourceLine" id="cb5-5" title="5">      (command <span class="st">&quot;new&quot;</span> (info (option str (long <span class="st">&quot;name&quot;</span>)) (progDesc <span class="st">&quot;New post&quot;</span>)))</a></code></pre></div>
-<p>Unfortunately, <code>execParser</code> or <code>customExecParser</code> from <code>optparse-applicative</code> use <a href="https://hackage.haskell.org/package/optparse-applicative-0.14.3.0/docs/src/Options.Applicative.Extra.html#handleParseResult"><code>handleParseResult</code></a> that exits when the command is not in parsed. I don’t want to exit on failure, because on failure I want to attempt <code>hakyll</code> commands. Fortunately, <code>optparse-applicative</code> provides <a href="https://hackage.haskell.org/package/optparse-applicative-0.14.3.0/docs/Options-Applicative.html#v:execParserPure"><code>execParsePure</code></a> that allows me to handle the parser result as I want. In this case, I attempted this:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb6-1" title="1"><span class="ot">main ::</span> <span class="dt">IO</span> ()</a>
-<a class="sourceLine" id="cb6-2" title="2">main <span class="fu">=</span> <span class="kw">do</span></a>
-<a class="sourceLine" id="cb6-3" title="3">  args <span class="ot">&lt;-</span> getArgs</a>
-<a class="sourceLine" id="cb6-4" title="4">  <span class="kw">let</span> parseResult <span class="fu">=</span></a>
-<a class="sourceLine" id="cb6-5" title="5">        execParserPure</a>
-<a class="sourceLine" id="cb6-6" title="6">          (prefs showHelpOnError)</a>
-<a class="sourceLine" id="cb6-7" title="7">          (info (helper <span class="fu">&lt;*&gt;</span> parser) fullDesc)</a>
-<a class="sourceLine" id="cb6-8" title="8">          args</a>
-<a class="sourceLine" id="cb6-9" title="9">  <span class="kw">case</span> parseResult <span class="kw">of</span></a>
-<a class="sourceLine" id="cb6-10" title="10">    <span class="dt">Success</span> (<span class="dt">New</span> name) <span class="ot">-&gt;</span> mkNewPost name <span class="fu">&gt;&gt;=</span> createNewPost</a>
-<a class="sourceLine" id="cb6-11" title="11">    <span class="dt">Failure</span> failure    <span class="ot">-&gt;</span> <span class="kw">do</span></a>
-<a class="sourceLine" id="cb6-12" title="12">      progname <span class="ot">&lt;-</span> getProgName</a>
-<a class="sourceLine" id="cb6-13" title="13">      <span class="kw">let</span> (msg, _) <span class="fu">=</span> renderFailure failure progname</a>
-<a class="sourceLine" id="cb6-14" title="14">      <span class="fu">putStrLn</span> <span class="st">&quot;# CUSTOM COMMANDS&quot;</span></a>
-<a class="sourceLine" id="cb6-15" title="15">      hPutStrLn stderr msg</a>
-<a class="sourceLine" id="cb6-16" title="16">      <span class="fu">putStrLn</span> <span class="st">&quot;\n# HAKYLL COMMANDS&quot;</span></a>
-<a class="sourceLine" id="cb6-17" title="17">      hakyll rules</a>
-<a class="sourceLine" id="cb6-18" title="18">    completionInvoke   <span class="ot">-&gt;</span> void <span class="fu">$</span> handleParseResult completionInvoke</a></code></pre></div>
-<p><code>execParserPure</code> returns a <code>ParserResult</code> and I simply pattern matched it. If the parsing is successful and parses <code>New name</code> it creates a new post and creates a basic templace with the current date and a given <code>name</code>. If it fails, it renders the parsing failure, prints some messages to separate the results from my custom commands and the ones from <code>hakyll</code>, redirects the parsing error to <code>stderr</code>, and then executes any <code>hakyll</code> command. Finally, if the parser result is <code>Completition</code>, I delegate <code>handleParseResult</code> to take care of that, because I don’t know what to do with that.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ot">parser ::</span> <span class="dt">Parser</span> <span class="dt">Opts</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>parser <span class="ot">=</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">New</span> <span class="op">&lt;$&gt;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    subparser</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>      (command <span class="st">&quot;new&quot;</span> (info (option str (long <span class="st">&quot;name&quot;</span>)) (progDesc <span class="st">&quot;New post&quot;</span>)))</span></code></pre></div>
+<p>Unfortunately, <code>execParser</code> or <code>customExecParser</code> from
+<code>optparse-applicative</code> use <a href="https://hackage.haskell.org/package/optparse-applicative-0.14.3.0/docs/src/Options.Applicative.Extra.html#handleParseResult"><code>handleParseResult</code></a>
+that exits when the command is not in parsed. I don’t want to exit
+on failure, because on failure I want to attempt <code>hakyll</code> commands. Fortunately,
+<code>optparse-applicative</code> provides <a href="https://hackage.haskell.org/package/optparse-applicative-0.14.3.0/docs/Options-Applicative.html#v:execParserPure"><code>execParsePure</code></a> that allows me
+to handle the parser result as I want. In this case, I attempted this:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ot">main ::</span> <span class="dt">IO</span> ()</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  args <span class="ot">&lt;-</span> getArgs</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> parseResult <span class="ot">=</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>        execParserPure</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>          (prefs showHelpOnError)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>          (info (helper <span class="op">&lt;*&gt;</span> parser) fullDesc)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>          args</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">case</span> parseResult <span class="kw">of</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">Success</span> (<span class="dt">New</span> name) <span class="ot">-&gt;</span> mkNewPost name <span class="op">&gt;&gt;=</span> createNewPost</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">Failure</span> failure    <span class="ot">-&gt;</span> <span class="kw">do</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>      progname <span class="ot">&lt;-</span> getProgName</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>      <span class="kw">let</span> (msg, _) <span class="ot">=</span> renderFailure failure progname</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">putStrLn</span> <span class="st">&quot;# CUSTOM COMMANDS&quot;</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>      hPutStrLn stderr msg</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>      <span class="fu">putStrLn</span> <span class="st">&quot;\n# HAKYLL COMMANDS&quot;</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>      hakyll rules</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    completionInvoke   <span class="ot">-&gt;</span> void <span class="op">$</span> handleParseResult completionInvoke</span></code></pre></div>
+<p><code>execParserPure</code> returns a <code>ParserResult</code> and I simply pattern matched it.
+If the parsing is successful and parses <code>New name</code> it creates a new post and
+creates a basic templace with the current date and a given <code>name</code>.
+If it fails, it renders the parsing failure, prints some messages to separate the
+results from my custom commands and the ones from <code>hakyll</code>,
+redirects the parsing error to <code>stderr</code>, and then executes any <code>hakyll</code> command.
+Finally, if the parser result is <code>Completition</code>, I delegate <code>handleParseResult</code>
+to take care of that, because I don’t know what to do with that.</p>
 <p>Now the results:</p>
 <pre><code>$ stack exec site
 
@@ -162,7 +183,8 @@ Checking for out-of-date items
 Compiling
 Success</code></pre>
 <p>You are probably thinking: Pfff! That’s gonna print the failure of your parser dummy! That’s terrible -_-</p>
-<p>I’m probably going to say: Definatelly, I agree with you. I’m going to look for a better approach but for now that will work.</p>
+<p>I’m probably going to say: Definatelly, I agree with you. I’m going to look for a better approach
+but for now that will work.</p>
 <p>Thanks for reading.</p>
 <p>ByE!</p>
 

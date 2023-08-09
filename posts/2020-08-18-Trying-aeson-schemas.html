@@ -41,168 +41,183 @@
 </div>
 <div class="info">
     
-    Tags: <a href="../tags/haskell.html">haskell</a>
+    Tags: <a title="All pages tagged 'haskell'." href="../tags/haskell.html" rel="tag">haskell</a>
     
 </div>
 
-<p>A few weeks ago, Brandon Chinn presented a talk about <a href="https://hackage.haskell.org/package/aeson-schemas">aeson-schemas</a>. You can see the talk <a href="https://www.youtube.com/watch?v=vJQtEa_7O3Q">here</a>. It was cool to see some type level programming applied to a really common task: parse JSON.</p>
-<p>So, I decided to give it a try and write some code. As suggested, by Vitaly Bragilevsky in his <a href="https://www.youtube.com/watch?v=n3H_YipBDrY">talk</a>:</p>
+<p>A few weeks ago, Brandon Chinn presented a talk about <a href="https://hackage.haskell.org/package/aeson-schemas">aeson-schemas</a>.
+You can see the talk <a href="https://www.youtube.com/watch?v=vJQtEa_7O3Q">here</a>. It was cool to see some
+type level programming applied to a really common task: parse JSON.</p>
+<p>So, I decided to give it a try and write some code. As suggested, by Vitaly
+Bragilevsky in his <a href="https://www.youtube.com/watch?v=n3H_YipBDrY">talk</a>:</p>
 <blockquote>
 <p><em>Always, always, always write your own code.</em></p>
 </blockquote>
 <p>And that’s what I’ll do here! (the code snippets are <a href="https://github.com/CristhianMotoche/as-test-ygo">here</a>).</p>
-<p>The problem is dead simple! I’m going to parse and process the JSON of one of my <a href="https://db.ygoprodeck.com/card/?search=Time%20Wizard">favorite</a> cards in Yu Gi Oh! and I’m going to use the <a href="https://db.ygoprodeck.com/api-guide/">Yu Gi Oh! Pro API</a>.</p>
+<p>The problem is dead simple! I’m going to parse and process the JSON of one of
+my <a href="https://db.ygoprodeck.com/card/?search=Time%20Wizard">favorite</a> cards in Yu Gi Oh! and
+I’m going to use the <a href="https://db.ygoprodeck.com/api-guide/">Yu Gi Oh! Pro API</a>.</p>
 <p>Here is the JSON representation:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode json"><code class="sourceCode json"><a class="sourceLine" id="cb1-1" title="1"><span class="fu">{</span></a>
-<a class="sourceLine" id="cb1-2" title="2">  <span class="dt">&quot;data&quot;</span><span class="fu">:</span> <span class="ot">[</span></a>
-<a class="sourceLine" id="cb1-3" title="3">  <span class="fu">{</span></a>
-<a class="sourceLine" id="cb1-4" title="4">    <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="dv">71625222</span><span class="fu">,</span></a>
-<a class="sourceLine" id="cb1-5" title="5">      <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;Time Wizard&quot;</span><span class="fu">,</span></a>
-<a class="sourceLine" id="cb1-6" title="6">      <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;Effect Monster&quot;</span><span class="fu">,</span></a>
-<a class="sourceLine" id="cb1-7" title="7">      <span class="dt">&quot;desc&quot;</span><span class="fu">:</span> <span class="st">&quot;Once per turn: You can toss a coin and call it. If you call it right, ...&quot;</span><span class="fu">,</span></a>
-<a class="sourceLine" id="cb1-8" title="8">      <span class="dt">&quot;atk&quot;</span><span class="fu">:</span> <span class="dv">500</span><span class="fu">,</span></a>
-<a class="sourceLine" id="cb1-9" title="9">      <span class="dt">&quot;def&quot;</span><span class="fu">:</span> <span class="dv">400</span><span class="fu">,</span></a>
-<a class="sourceLine" id="cb1-10" title="10">      <span class="dt">&quot;level&quot;</span><span class="fu">:</span> <span class="dv">2</span><span class="fu">,</span></a>
-<a class="sourceLine" id="cb1-11" title="11">      <span class="dt">&quot;race&quot;</span><span class="fu">:</span> <span class="st">&quot;Spellcaster&quot;</span><span class="fu">,</span></a>
-<a class="sourceLine" id="cb1-12" title="12">      <span class="dt">&quot;attribute&quot;</span><span class="fu">:</span> <span class="st">&quot;LIGHT&quot;</span><span class="fu">,</span></a>
-<a class="sourceLine" id="cb1-13" title="13">      <span class="dt">&quot;archetype&quot;</span><span class="fu">:</span> <span class="st">&quot;Magician&quot;</span><span class="fu">,</span></a>
-<a class="sourceLine" id="cb1-14" title="14">      <span class="dt">&quot;card_sets&quot;</span><span class="fu">:</span> <span class="ot">[</span></a>
-<a class="sourceLine" id="cb1-15" title="15">        <span class="fu">{</span></a>
-<a class="sourceLine" id="cb1-16" title="16">          <span class="dt">&quot;set_name&quot;</span><span class="fu">:</span> <span class="st">&quot;Starter Deck: Joey&quot;</span><span class="fu">,</span></a>
-<a class="sourceLine" id="cb1-17" title="17">          <span class="dt">&quot;set_code&quot;</span><span class="fu">:</span> <span class="st">&quot;SDJ-015&quot;</span><span class="fu">,</span></a>
-<a class="sourceLine" id="cb1-18" title="18">          <span class="dt">&quot;set_rarity&quot;</span><span class="fu">:</span> <span class="st">&quot;Common&quot;</span><span class="fu">,</span></a>
-<a class="sourceLine" id="cb1-19" title="19">          <span class="dt">&quot;set_rarity_code&quot;</span><span class="fu">:</span> <span class="st">&quot;(C)&quot;</span><span class="fu">,</span></a>
-<a class="sourceLine" id="cb1-20" title="20">          <span class="dt">&quot;set_price&quot;</span><span class="fu">:</span> <span class="st">&quot;1.14&quot;</span></a>
-<a class="sourceLine" id="cb1-21" title="21">        <span class="fu">}</span></a>
-<a class="sourceLine" id="cb1-22" title="22">      <span class="ot">]</span><span class="fu">,</span></a>
-<a class="sourceLine" id="cb1-23" title="23">      <span class="dt">&quot;card_images&quot;</span><span class="fu">:</span> <span class="ot">[</span></a>
-<a class="sourceLine" id="cb1-24" title="24">        <span class="fu">{</span></a>
-<a class="sourceLine" id="cb1-25" title="25">          <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="dv">71625222</span><span class="fu">,</span></a>
-<a class="sourceLine" id="cb1-26" title="26">          <span class="dt">&quot;image_url&quot;</span><span class="fu">:</span> <span class="st">&quot;https:</span><span class="ch">\/\/</span><span class="st">storage.googleapis.com</span><span class="ch">\/</span><span class="st">ygoprodeck.com</span><span class="ch">\/</span><span class="st">pics</span><span class="ch">\/</span><span class="st">71625222.jpg&quot;</span><span class="fu">,</span></a>
-<a class="sourceLine" id="cb1-27" title="27">          <span class="dt">&quot;image_url_small&quot;</span><span class="fu">:</span> <span class="st">&quot;https:</span><span class="ch">\/\/</span><span class="st">storage.googleapis.com</span><span class="ch">\/</span><span class="st">ygoprodeck.com</span><span class="ch">\/</span><span class="st">pics_small</span><span class="ch">\/</span><span class="st">71625222.jpg&quot;</span></a>
-<a class="sourceLine" id="cb1-28" title="28"></a>
-<a class="sourceLine" id="cb1-29" title="29">        <span class="fu">}</span></a>
-<a class="sourceLine" id="cb1-30" title="30">      <span class="ot">]</span><span class="fu">,</span></a>
-<a class="sourceLine" id="cb1-31" title="31">      <span class="dt">&quot;card_prices&quot;</span><span class="fu">:</span> <span class="ot">[</span></a>
-<a class="sourceLine" id="cb1-32" title="32">        <span class="fu">{</span></a>
-<a class="sourceLine" id="cb1-33" title="33">          <span class="dt">&quot;cardmarket_price&quot;</span><span class="fu">:</span> <span class="st">&quot;0.12&quot;</span><span class="fu">,</span></a>
-<a class="sourceLine" id="cb1-34" title="34">          <span class="dt">&quot;tcgplayer_price&quot;</span><span class="fu">:</span> <span class="st">&quot;0.22&quot;</span><span class="fu">,</span></a>
-<a class="sourceLine" id="cb1-35" title="35">          <span class="dt">&quot;ebay_price&quot;</span><span class="fu">:</span> <span class="st">&quot;3.95&quot;</span><span class="fu">,</span></a>
-<a class="sourceLine" id="cb1-36" title="36">          <span class="dt">&quot;amazon_price&quot;</span><span class="fu">:</span> <span class="st">&quot;2.11&quot;</span><span class="fu">,</span></a>
-<a class="sourceLine" id="cb1-37" title="37">          <span class="dt">&quot;coolstuffinc_price&quot;</span><span class="fu">:</span> <span class="kw">null</span></a>
-<a class="sourceLine" id="cb1-38" title="38">        <span class="fu">}</span></a>
-<a class="sourceLine" id="cb1-39" title="39">      <span class="ot">]</span></a>
-<a class="sourceLine" id="cb1-40" title="40">    <span class="fu">}</span></a>
-<a class="sourceLine" id="cb1-41" title="41">  <span class="ot">]</span></a>
-<a class="sourceLine" id="cb1-42" title="42"><span class="fu">}</span></a></code></pre></div>
-<p>As you can see, the JSON is kind of nested and <em>aeson-schemas</em> promisses to be helpful in this situations. Let’s see if that’s true.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;data&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">{</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="dv">71625222</span><span class="fu">,</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;Time Wizard&quot;</span><span class="fu">,</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;Effect Monster&quot;</span><span class="fu">,</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;desc&quot;</span><span class="fu">:</span> <span class="st">&quot;Once per turn: You can toss a coin and call it. If you call it right, ...&quot;</span><span class="fu">,</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;atk&quot;</span><span class="fu">:</span> <span class="dv">500</span><span class="fu">,</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;def&quot;</span><span class="fu">:</span> <span class="dv">400</span><span class="fu">,</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;level&quot;</span><span class="fu">:</span> <span class="dv">2</span><span class="fu">,</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;race&quot;</span><span class="fu">:</span> <span class="st">&quot;Spellcaster&quot;</span><span class="fu">,</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;attribute&quot;</span><span class="fu">:</span> <span class="st">&quot;LIGHT&quot;</span><span class="fu">,</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;archetype&quot;</span><span class="fu">:</span> <span class="st">&quot;Magician&quot;</span><span class="fu">,</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;card_sets&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>        <span class="fu">{</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;set_name&quot;</span><span class="fu">:</span> <span class="st">&quot;Starter Deck: Joey&quot;</span><span class="fu">,</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;set_code&quot;</span><span class="fu">:</span> <span class="st">&quot;SDJ-015&quot;</span><span class="fu">,</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;set_rarity&quot;</span><span class="fu">:</span> <span class="st">&quot;Common&quot;</span><span class="fu">,</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;set_rarity_code&quot;</span><span class="fu">:</span> <span class="st">&quot;(C)&quot;</span><span class="fu">,</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;set_price&quot;</span><span class="fu">:</span> <span class="st">&quot;1.14&quot;</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>        <span class="fu">}</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>      <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;card_images&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>        <span class="fu">{</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="dv">71625222</span><span class="fu">,</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;image_url&quot;</span><span class="fu">:</span> <span class="st">&quot;https:</span><span class="ch">\/\/</span><span class="st">storage.googleapis.com</span><span class="ch">\/</span><span class="st">ygoprodeck.com</span><span class="ch">\/</span><span class="st">pics</span><span class="ch">\/</span><span class="st">71625222.jpg&quot;</span><span class="fu">,</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;image_url_small&quot;</span><span class="fu">:</span> <span class="st">&quot;https:</span><span class="ch">\/\/</span><span class="st">storage.googleapis.com</span><span class="ch">\/</span><span class="st">ygoprodeck.com</span><span class="ch">\/</span><span class="st">pics_small</span><span class="ch">\/</span><span class="st">71625222.jpg&quot;</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>        <span class="fu">}</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>      <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;card_prices&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>        <span class="fu">{</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;cardmarket_price&quot;</span><span class="fu">:</span> <span class="st">&quot;0.12&quot;</span><span class="fu">,</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;tcgplayer_price&quot;</span><span class="fu">:</span> <span class="st">&quot;0.22&quot;</span><span class="fu">,</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;ebay_price&quot;</span><span class="fu">:</span> <span class="st">&quot;3.95&quot;</span><span class="fu">,</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;amazon_price&quot;</span><span class="fu">:</span> <span class="st">&quot;2.11&quot;</span><span class="fu">,</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;coolstuffinc_price&quot;</span><span class="fu">:</span> <span class="kw">null</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>        <span class="fu">}</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>      <span class="ot">]</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>As you can see, the JSON is kind of nested and <em>aeson-schemas</em> promisses to be
+helpful in this situations. Let’s see if that’s true.</p>
 <p>First, you’ll need to add the following extensions:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb2-1" title="1"><span class="ot">{-# LANGUAGE DataKinds         #-}</span></a>
-<a class="sourceLine" id="cb2-2" title="2"><span class="ot">{-# LANGUAGE OverloadedStrings #-}</span></a>
-<a class="sourceLine" id="cb2-3" title="3"><span class="ot">{-# LANGUAGE QuasiQuotes       #-}</span></a>
-<a class="sourceLine" id="cb2-4" title="4"><span class="ot">{-# LANGUAGE TypeApplications  #-}</span></a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE DataKinds         #-}</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE OverloadedStrings #-}</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE QuasiQuotes       #-}</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE TypeApplications  #-}</span></span></code></pre></div>
 <p>and import these libraries:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb3-1" title="1"></a>
-<a class="sourceLine" id="cb3-2" title="2"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Aeson</span>           <span class="kw">as</span> <span class="dt">A</span></a>
-<a class="sourceLine" id="cb3-3" title="3"><span class="kw">import</span>           <span class="dt">Data.Aeson.Schema</span>    (<span class="dt">Object</span>, get, schema)</a>
-<a class="sourceLine" id="cb3-4" title="4"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.ByteString.Lazy</span> <span class="kw">as</span> <span class="dt">BS</span></a>
-<a class="sourceLine" id="cb3-5" title="5"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Text.IO</span>         <span class="kw">as</span> <span class="dt">T</span></a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Aeson</span>           <span class="kw">as</span> <span class="dt">A</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span>           <span class="dt">Data.Aeson.Schema</span>    (<span class="dt">Object</span>, get, schema)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.ByteString.Lazy</span> <span class="kw">as</span> <span class="dt">BS</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Text.IO</span>         <span class="kw">as</span> <span class="dt">T</span></span></code></pre></div>
 <p>Now, let’s define the first schema:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb4-1" title="1"><span class="kw">type</span> <span class="dt">Data</span> <span class="fu">=</span> [schema|</a>
-<a class="sourceLine" id="cb4-2" title="2">  {</a>
-<a class="sourceLine" id="cb4-3" title="3">    data: List #Card</a>
-<a class="sourceLine" id="cb4-4" title="4">  }</a>
-<a class="sourceLine" id="cb4-5" title="5">|]</a></code></pre></div>
-<p><code>Data</code> is just a wrapper for a list of card. In this simple example, we’re just expecting one type of card, so it’s not necessary to define all the types of possible schemas that we could get from the API.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb5-1" title="1"><span class="kw">type</span> <span class="dt">Card</span> <span class="fu">=</span> [schema|</a>
-<a class="sourceLine" id="cb5-2" title="2">  {</a>
-<a class="sourceLine" id="cb5-3" title="3">    id: Int,</a>
-<a class="sourceLine" id="cb5-4" title="4">    name: Text,</a>
-<a class="sourceLine" id="cb5-5" title="5">    type: Text,</a>
-<a class="sourceLine" id="cb5-6" title="6">    desc: Text,</a>
-<a class="sourceLine" id="cb5-7" title="7">    atk: Int,</a>
-<a class="sourceLine" id="cb5-8" title="8">    def: Int,</a>
-<a class="sourceLine" id="cb5-9" title="9">    level: Int,</a>
-<a class="sourceLine" id="cb5-10" title="10">    race: Text,</a>
-<a class="sourceLine" id="cb5-11" title="11">    attribute: Text,</a>
-<a class="sourceLine" id="cb5-12" title="12">    archetype: Text,</a>
-<a class="sourceLine" id="cb5-13" title="13">    card_sets: List #CardSet,</a>
-<a class="sourceLine" id="cb5-14" title="14">    card_images: List #CardImage,</a>
-<a class="sourceLine" id="cb5-15" title="15">    card_prices: List #CardPrice,</a>
-<a class="sourceLine" id="cb5-16" title="16">  }</a>
-<a class="sourceLine" id="cb5-17" title="17">|]</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">Data</span> <span class="ot">=</span> [schema|</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  {</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    data: List #Card</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>|]</span></code></pre></div>
+<p><code>Data</code> is just a wrapper for a list of card. In this simple example,
+we’re just expecting one type of card, so it’s not necessary to define all
+the types of possible schemas that we could get from the API.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">Card</span> <span class="ot">=</span> [schema|</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  {</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    id: Int,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    name: Text,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    type: Text,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    desc: Text,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    atk: Int,</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    def: Int,</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    level: Int,</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    race: Text,</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    attribute: Text,</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    archetype: Text,</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    card_sets: List #CardSet,</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    card_images: List #CardImage,</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    card_prices: List #CardPrice,</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>|]</span></code></pre></div>
 <p><code>Card</code> is a simple struture with some simple types <code>Int</code>, <code>Text</code>, and <code>List</code>s.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb6-1" title="1"><span class="kw">type</span> <span class="dt">CardSet</span> <span class="fu">=</span> [schema|</a>
-<a class="sourceLine" id="cb6-2" title="2">  {</a>
-<a class="sourceLine" id="cb6-3" title="3">    set_name: Text,</a>
-<a class="sourceLine" id="cb6-4" title="4">    set_code: Text,</a>
-<a class="sourceLine" id="cb6-5" title="5">    set_rarity: Text,</a>
-<a class="sourceLine" id="cb6-6" title="6">    set_rarity_code: Text,</a>
-<a class="sourceLine" id="cb6-7" title="7">    set_price: Text,</a>
-<a class="sourceLine" id="cb6-8" title="8">  }</a>
-<a class="sourceLine" id="cb6-9" title="9">|]</a>
-<a class="sourceLine" id="cb6-10" title="10"></a>
-<a class="sourceLine" id="cb6-11" title="11"><span class="kw">type</span> <span class="dt">CardImage</span> <span class="fu">=</span> [schema|</a>
-<a class="sourceLine" id="cb6-12" title="12">  {</a>
-<a class="sourceLine" id="cb6-13" title="13">    id: Int,</a>
-<a class="sourceLine" id="cb6-14" title="14">    image_url: Text,</a>
-<a class="sourceLine" id="cb6-15" title="15">    image_url_small: Text,</a>
-<a class="sourceLine" id="cb6-16" title="16">  }</a>
-<a class="sourceLine" id="cb6-17" title="17">|]</a>
-<a class="sourceLine" id="cb6-18" title="18"></a>
-<a class="sourceLine" id="cb6-19" title="19"><span class="kw">type</span> <span class="dt">CardPrice</span> <span class="fu">=</span> [schema|</a>
-<a class="sourceLine" id="cb6-20" title="20">  {</a>
-<a class="sourceLine" id="cb6-21" title="21">    cardmarket_price: Text,</a>
-<a class="sourceLine" id="cb6-22" title="22">    tcgplayer_price: Text,</a>
-<a class="sourceLine" id="cb6-23" title="23">    ebay_price: Text,</a>
-<a class="sourceLine" id="cb6-24" title="24">    amazon_price: Text,</a>
-<a class="sourceLine" id="cb6-25" title="25">    coolstuffinc_price: Maybe Text,</a>
-<a class="sourceLine" id="cb6-26" title="26">  }</a>
-<a class="sourceLine" id="cb6-27" title="27">|]</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">CardSet</span> <span class="ot">=</span> [schema|</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  {</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    set_name: Text,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    set_code: Text,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    set_rarity: Text,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    set_rarity_code: Text,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    set_price: Text,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>|]</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">CardImage</span> <span class="ot">=</span> [schema|</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  {</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    id: Int,</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    image_url: Text,</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    image_url_small: Text,</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>|]</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">CardPrice</span> <span class="ot">=</span> [schema|</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>  {</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    cardmarket_price: Text,</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    tcgplayer_price: Text,</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    ebay_price: Text,</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    amazon_price: Text,</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    coolstuffinc_price: Maybe Text,</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>|]</span></code></pre></div>
 <p>As you can see, <code>CardSet</code>, <code>CardImage</code>, and <code>CardPrice</code> are simple strucures, too.</p>
 <p>Now, let’s parse it:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb7-1" title="1"><span class="ot">main ::</span> <span class="dt">IO</span> ()</a>
-<a class="sourceLine" id="cb7-2" title="2">main <span class="fu">=</span></a>
-<a class="sourceLine" id="cb7-3" title="3">  <span class="kw">let</span><span class="ot"> decodeStr ::</span> <span class="dt">BS.ByteString</span> <span class="ot">-&gt;</span> <span class="dt">Either</span> <span class="dt">String</span> (<span class="dt">Object</span> <span class="dt">Data</span>)</a>
-<a class="sourceLine" id="cb7-4" title="4">      decodeStr <span class="fu">=</span> A.eitherDecode</a>
-<a class="sourceLine" id="cb7-5" title="5">   <span class="kw">in</span> <span class="kw">do</span></a>
-<a class="sourceLine" id="cb7-6" title="6">     eData <span class="ot">&lt;-</span> decodeStr <span class="fu">&lt;$&gt;</span> BS.readFile <span class="st">&quot;time-wizard.json&quot;</span></a>
-<a class="sourceLine" id="cb7-7" title="7">     <span class="kw">case</span> eData <span class="kw">of</span></a>
-<a class="sourceLine" id="cb7-8" title="8">       <span class="dt">Left</span> str <span class="ot">-&gt;</span> <span class="fu">putStrLn</span> <span class="fu">$</span> <span class="st">&quot;Error: &quot;</span> <span class="fu">++</span> str</a>
-<a class="sourceLine" id="cb7-9" title="9">       <span class="dt">Right</span> dat <span class="ot">-&gt;</span> <span class="fu">print</span> dat</a></code></pre></div>
-<p>Running this code, will print the parsed JSON in the console. If we change something in the expected content, we’ll get an error message.</p>
-<p>Let’s access to the properties of the parsed content. From the code above, I’m going to access the <code>data</code> property of the <code>dat</code> object and pass it to the function <code>printCardInfo</code> that expects a <code>Card</code> object:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb8-1" title="1">       <span class="dt">Right</span> dat <span class="ot">-&gt;</span> <span class="fu">mapM_</span> printCardInfo [get| dat.data[] |]</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ot">main ::</span> <span class="dt">IO</span> ()</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span><span class="ot"> decodeStr ::</span> <span class="dt">BS.ByteString</span> <span class="ot">-&gt;</span> <span class="dt">Either</span> <span class="dt">String</span> (<span class="dt">Object</span> <span class="dt">Data</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>      decodeStr <span class="ot">=</span> A.eitherDecode</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>   <span class="kw">in</span> <span class="kw">do</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>     eData <span class="ot">&lt;-</span> decodeStr <span class="op">&lt;$&gt;</span> BS.readFile <span class="st">&quot;time-wizard.json&quot;</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>     <span class="kw">case</span> eData <span class="kw">of</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>       <span class="dt">Left</span> str <span class="ot">-&gt;</span> <span class="fu">putStrLn</span> <span class="op">$</span> <span class="st">&quot;Error: &quot;</span> <span class="op">++</span> str</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>       <span class="dt">Right</span> dat <span class="ot">-&gt;</span> <span class="fu">print</span> dat</span></code></pre></div>
+<p>Running this code, will print the parsed JSON in the console. If we change
+something in the expected content, we’ll get an error message.</p>
+<p>Let’s access to the properties of the parsed content. From the code above,
+I’m going to access the <code>data</code> property of the <code>dat</code> object and pass it to the
+function <code>printCardInfo</code> that expects a <code>Card</code> object:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>       <span class="dt">Right</span> dat <span class="ot">-&gt;</span> <span class="fu">mapM_</span> printCardInfo [get| dat.data[] |]</span></code></pre></div>
 <p>Now, <code>printCardInfo</code> has more data accessors:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb9-1" title="1"></a>
-<a class="sourceLine" id="cb9-2" title="2"><span class="ot">printCardInfo ::</span> <span class="dt">Object</span> <span class="dt">Card</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()</a>
-<a class="sourceLine" id="cb9-3" title="3">printCardInfo card <span class="fu">=</span> <span class="kw">do</span></a>
-<a class="sourceLine" id="cb9-4" title="4">  <span class="fu">putStrLn</span> <span class="fu">$</span> <span class="st">&quot;id: &quot;</span> <span class="fu">++</span> <span class="fu">show</span> [get| card.id |]</a>
-<a class="sourceLine" id="cb9-5" title="5">  <span class="fu">putStrLn</span> <span class="fu">$</span> <span class="st">&quot;name: &quot;</span> <span class="fu">++</span> <span class="fu">show</span> [get| card.name |]</a>
-<a class="sourceLine" id="cb9-6" title="6">  <span class="fu">putStrLn</span> <span class="fu">$</span> <span class="fu">mconcat</span> [</a>
-<a class="sourceLine" id="cb9-7" title="7">    <span class="st">&quot;atk: &quot;</span>, <span class="fu">show</span> [get| card.atk |], <span class="st">&quot; &quot;</span>,</a>
-<a class="sourceLine" id="cb9-8" title="8">    <span class="st">&quot;def: &quot;</span>, <span class="fu">show</span> [get| card.def |]</a>
-<a class="sourceLine" id="cb9-9" title="9">    ]</a>
-<a class="sourceLine" id="cb9-10" title="10">  T.putStrLn <span class="fu">$</span> <span class="fu">mconcat</span> <span class="fu">$</span></a>
-<a class="sourceLine" id="cb9-11" title="11">    [<span class="st">&quot;Small image url: &quot;</span>] <span class="fu">++</span> [get| card.card_images[].image_url_small |]</a>
-<a class="sourceLine" id="cb9-12" title="12">  <span class="fu">putStrLn</span> <span class="fu">$</span></a>
-<a class="sourceLine" id="cb9-13" title="13">    <span class="st">&quot;Price In Coolstuff.inc: &quot;</span> <span class="fu">++</span> <span class="fu">show</span> [get| card.card_prices[].coolstuffinc_price |]</a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ot">printCardInfo ::</span> <span class="dt">Object</span> <span class="dt">Card</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>printCardInfo card <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">putStrLn</span> <span class="op">$</span> <span class="st">&quot;id: &quot;</span> <span class="op">++</span> <span class="fu">show</span> [get| card.id |]</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">putStrLn</span> <span class="op">$</span> <span class="st">&quot;name: &quot;</span> <span class="op">++</span> <span class="fu">show</span> [get| card.name |]</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">putStrLn</span> <span class="op">$</span> <span class="fu">mconcat</span> [</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;atk: &quot;</span>, <span class="fu">show</span> [get| card.atk |], <span class="st">&quot; &quot;</span>,</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;def: &quot;</span>, <span class="fu">show</span> [get| card.def |]</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  T.putStrLn <span class="op">$</span> <span class="fu">mconcat</span> <span class="op">$</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    [<span class="st">&quot;Small image url: &quot;</span>] <span class="op">++</span> [get| card.card_images[].image_url_small |]</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">putStrLn</span> <span class="op">$</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Price In Coolstuff.inc: &quot;</span> <span class="op">++</span> <span class="fu">show</span> [get| card.card_prices[].coolstuffinc_price |]</span></code></pre></div>
 <p>There are two important accessors to mention here:</p>
 <ul>
 <li><code>[get| card.def |]</code> that access the property <code>def</code> of <code>card</code></li>
 <li><code>[get| card.card_images[].image_url_small |]</code> that access the property <code>image_url_small</code> of all the <code>card_images</code></li>
 </ul>
-<p>There are more interesting data accessors that you’ll find in the library (e.g. <code>?</code> to work with optional data).</p>
-<p>Now, here’s where it comes really interesting. What would happen if we change <code>name</code> with <code>first_name</code> in the data accessor? Well, the answer is simple: the code <strong>won’t</strong> compile!</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode py"><code class="sourceCode python"><a class="sourceLine" id="cb10-1" title="1">    • Key <span class="st">'first_name'</span> does <span class="kw">not</span> exist <span class="kw">in</span> the following schema:</a>
-<a class="sourceLine" id="cb10-2" title="2">      <span class="co">'[ '</span>( <span class="st">'Data.Aeson.Schema.Internal.NormalKey &quot;id&quot;,</span></a>
-<a class="sourceLine" id="cb10-3" title="3"><span class="st">            '</span>Data.Aeson.Schema.Internal.SchemaInt),</a>
-<a class="sourceLine" id="cb10-4" title="4">         <span class="co">'( '</span>Data.Aeson.Schema.Internal.NormalKey <span class="st">&quot;name&quot;</span>,</a>
-<a class="sourceLine" id="cb10-5" title="5">            <span class="co">'Data.Aeson.Schema.Internal.SchemaText),</span></a>
-<a class="sourceLine" id="cb10-6" title="6"><span class="co">         '</span>( <span class="st">'Data.Aeson.Schema.Internal.NormalKey &quot;type&quot;,</span></a></code></pre></div>
+<p>There are more interesting data accessors that you’ll find in the library (e.g. <code>?</code> to work with optional data).</p>
+<p>Now, here’s where it comes really interesting. What would happen if we change
+<code>name</code> with <code>first_name</code> in the data accessor? Well, the answer is simple:
+the code <strong>won’t</strong> compile!</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode py"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>    • Key <span class="st">'first_name'</span> does <span class="kw">not</span> exist <span class="kw">in</span> the following schema:</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>      <span class="co">'[ '</span>( <span class="st">'Data.Aeson.Schema.Internal.NormalKey &quot;id&quot;,</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="er">            'Data.Aeson.Schema.Internal.SchemaInt),</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>         <span class="st">'( '</span>Data.Aeson.Schema.Internal.NormalKey <span class="st">&quot;name&quot;</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>            <span class="st">'Data.Aeson.Schema.Internal.SchemaText),</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="er">         '( 'Data.Aeson.Schema.Internal.NormalKey &quot;type&quot;,</span></span></code></pre></div>
 <p>Cool, right? And the error message is quite explanatory.</p>
 <h2 id="conclusion">Conclusion</h2>
-<p>aeson-schemas is a type safe library that helps us to parse JSON and access its properties. If we misspell or use the incorrect syntax to access a property we’ll get a compilation error, which is much better than an error at runtime!</p>
+<p>aeson-schemas is a type safe library that helps us to parse JSON and access
+its properties. If we misspell or use the incorrect syntax to access a property
+we’ll get a compilation error, which is much better than an error at runtime!</p>
 <p>So, give it a look, I’m sure you’ll find it interesting.</p>
 <p>That’s all for now. Thanks for reading!</p>
 <p>ByE!</p>
