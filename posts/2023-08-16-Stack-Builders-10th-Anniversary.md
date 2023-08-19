@@ -15,14 +15,17 @@ something I ate during lunch. This incident taught me a valuable lesson: it is
 important to exercise caution when consuming unfamiliar food, particularly if 
 it contains fish, in a restaurant where the preparation methods are unknown.
 As one of my dear colleagues wisely pointed out, "Have you ever seen Kitchen Nightmares?
-You never know how your food is prepared!"
+You never know how your food is prepared!". I don't want to blame the people
+that prepared the food or the administration because I'm not Gordon Ramsay.
+Running a business and cooking can be very complicated so I won't critize the
+restaurant.
 
 ![Kitchen Nightmares - Better be careful about what you eat][kitchen-nightmares]
 
 The after party was awesome, too! Although, I slept most of the party (again, tummy ache) but it was
-cool to see everybody so happy and having fun. I'm very happy to be part of this
-amazing team. Hopefully, I can celebrate my 10th anniversary in this company
-some years in the future.
+cool to see everybody so happy and having fun. Also, Tumbaco is very nice in the
+mornings. I'm very happy to be part of this amazing team. Hopefully, I can
+celebrate my 10th anniversary in this company some years in the future.
 
 [gifts]: /images/sb-10th-anniversary/gifts.jpg {width=600px class=img-blog}
 [kitchen-nightmares]: /images/sb-10th-anniversary/kitchen-nightmares.jpg {width=600px class=img-blog}
