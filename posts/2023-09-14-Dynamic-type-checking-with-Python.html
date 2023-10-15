@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="description" content="A blog page for people who is interested in programming.">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>CAMM Blog</title>
+    <link rel="icon" type="image/png" href="../images/devi.png">
+    <link href="../assets/styles/app.css" rel="stylesheet">
+    <meta name="google-site-verification" content="ZE7UdJw8EgIGYT1wlPQ1IDRaqOa9IseKmfw4ufHxEAk" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body class="body">
+    <div class="body__container">
+      <div class="logo">
+        <h1 class="logo__title">
+          <a class="logo__link" href="../">Camm Blog Page</a>
+        </h1>
+      </div>
+      <nav class="navbar">
+        <ul class="nav-list">
+          <li class="nav-list__item">
+            <a class="nav-list__link" href="../">Home</a>
+          </li>
+          <li class="nav-list__item">
+            <a class="nav-list__link" href="../contact.html">About</a>
+          </li>
+          <li class="nav-list__item">
+            <a class="nav-list__link" href="../archive.html">Archive</a>
+          </li>
+        </ul>
+      </nav>
+      <div class="content">
+        <h1 class="content__title">Dynamic type checking with Python</h1>
+        <div class="content_body">
+          <link href="../css/hk-pyg.css" rel="stylesheet">
+<link href="../css/tables.css" rel="stylesheet">
+<div class="info">
+    Posted on September 14, 2023
+    
+</div>
+<div class="info">
+    
+    Tags: <a title="All pages tagged 'python'." href="../tags/python.html" rel="tag">python</a>
+    
+</div>
+
+<h1 id="dynamic-type-checking">Dynamic Type Checking</h1>
+<p>This year I had the pleasure to give a <a href="https://www.youtube.com/watch?v=yt8nYEkCfNU">talk about type hints</a> at PyCon Colomba 2023.
+It was rewarding and I really enjoyed it! I’ll attend the next one even if I’m not a speaker. I’ve been using type hints to get
+feedback about types before actually executing the code using a static analysis tool (e.g. mypy, pyright, pyre, etc.). It worked
+for me but it doesn’t ensure that the executing code respects the types. For that reason, I decided to give a look at dynamic type
+checking which consist on verifying the types at runtime!</p>
+<h2 id="proof-of-concept">Proof of Concept</h2>
+<p>I decided to do a simple proof of concept (poc) creating a parser of env variables given a type. I was planning to create a interface like this:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode py"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Config(BaseConfig):</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    PORT: <span class="bu">int</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    HOSTNAME: <span class="bu">str</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    FLAGS: <span class="bu">list</span>[<span class="bu">str</span>] <span class="op">|</span> <span class="va">None</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    ENVIRONMENT: Literal[<span class="st">'stage'</span>, <span class="st">'prod'</span>]</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>conf <span class="op">=</span> Config().load()</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> conf:</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">&quot;Error with type variables&quot;</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    sys.exit(<span class="dv">1</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    reveal_type(conf.PORT) <span class="co"># It would be 'int'</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    reveal_type(conf.ENVIRONMENT) <span class="co"># It would be &quot;Literal['stage', 'prod']&quot;</span></span></code></pre></div>
+<p>So, the first challenge was to get the type hint information at runtime!
+Fortunately, the typing package provides some helpers to do that.
+The first helper function is <code>typing.get_type_hints()</code> that returns information
+about type hints:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode py"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Config:</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    PORT: <span class="bu">int</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    HOSTNAME: <span class="bu">str</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    FLAGS: <span class="bu">list</span>[<span class="bu">str</span>] <span class="op">|</span> <span class="va">None</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    ENVIRONMENT: Literal[<span class="st">'stage'</span>, <span class="st">'prod'</span>]</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>typing.get_type_hints(Config)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;</span> {<span class="st">'PORT'</span>: <span class="op">&lt;</span><span class="kw">class</span> <span class="st">'int'</span><span class="op">&gt;</span>, <span class="st">'HOSTNAME'</span>: <span class="op">&lt;</span><span class="kw">class</span> <span class="st">'str'</span><span class="op">&gt;</span>, <span class="st">'FLAGS'</span>: <span class="bu">list</span>[<span class="bu">str</span>] <span class="op">|</span> <span class="va">None</span>, <span class="st">'ENVIRONMENT'</span>: typing.Literal[<span class="st">'stage'</span>, <span class="st">'prod'</span>]}</span></code></pre></div>
+<p>After that, I had to get parse each type and propertly parse it. I created the function
+<code>_check_type</code> which receive the <code>key</code> (name of the attribute),
+<code>value</code> (the string value read from <code>os.environ</code>), and <code>type_to_apply</code> which
+was the type obtained from the values of <code>get_type_hints</code> dictionary.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode py"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> _check_type(cls, key: <span class="bu">str</span>, value: <span class="bu">str</span>, type_to_apply: Type) <span class="op">-&gt;</span> Any:</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="bu">issubclass</span>(type_to_apply, <span class="bu">bool</span>):</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> value <span class="op">==</span> <span class="st">&quot;True&quot;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> <span class="bu">issubclass</span>(type_to_apply, <span class="bu">int</span>):</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> <span class="bu">int</span>(value)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> <span class="bu">issubclass</span>(type_to_apply, <span class="bu">float</span>):</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> <span class="bu">float</span>(value)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> <span class="bu">issubclass</span>(type_to_apply, <span class="bu">str</span>):</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> value</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>            <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="ss">f&quot;The given type (</span><span class="sc">{</span>type_to_apply<span class="sc">}</span><span class="ss">) for </span><span class="sc">{</span>key<span class="sc">}</span><span class="ss"> cannot be used to parse an env variable&quot;</span>)</span></code></pre></div>
+<p><code>issubclass</code> checks if the <code>type_to_apply</code> was of a particular type so that I could
+apply the parser propertly. This worked for the basic types but it didn’t work for
+union types. I had to use <code>isinstance</code> in that case:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode py"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> _check_type(cls, key: <span class="bu">str</span>, value: <span class="bu">str</span>, type_to_apply: Type) <span class="op">-&gt;</span> Any:</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="bu">isinstance</span>(type_to_apply, types.UnionType):</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> cls._try_union_types(key, value, cast(types.UnionType, type_to_apply))</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> <span class="bu">issubclass</span>(type_to_apply, <span class="bu">bool</span>):</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>            ...</span></code></pre></div>
+<p><code>_try_union_types</code> looked like this:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode py"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>    <span class="at">@classmethod</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> _try_union_types(cls, key: <span class="bu">str</span>, value: <span class="bu">str</span>, type_to_apply: types.UnionType) <span class="op">-&gt;</span> Any:</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> inner_type_to_apply <span class="kw">in</span> typing.get_args(type_to_apply):</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>            <span class="cf">try</span>:</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                <span class="cf">return</span> cls._check_type(key, value, inner_type_to_apply)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>            <span class="cf">except</span> <span class="pp">ValueError</span>:</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>                <span class="cf">continue</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> <span class="pp">ValueError</span>(</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>            <span class="ss">f'The value </span><span class="sc">{</span>value<span class="sc">}</span><span class="ss"> is not of any of these types'</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>            <span class="ss">f' </span><span class="sc">{</span>typing<span class="sc">.</span>get_args(type_to_apply)<span class="sc">}</span><span class="ss">'</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        )</span></code></pre></div>
+<p>There were more things that I had to do like checking if a variable is <code>Optional[T]</code> or <code>T | None</code> and so on.</p>
+<p>I noticed this was getting too big for a simple poc because I think I was doing exactly what dynamic type checkers like Pydantic or beartype do.</p>
+<p>So, I decided to review them and give them a try for my use case and I noticed it was quite simple:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode py"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pydantic <span class="im">import</span> BaseModel</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Config(BaseModel):</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    PORT: <span class="bu">int</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    HOSTNAME: <span class="bu">str</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    FLAGS: <span class="bu">list</span>[<span class="bu">str</span>] <span class="op">|</span> <span class="va">None</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    ENVIRONMENT: Literal[<span class="st">'stage'</span>, <span class="st">'prod'</span>]</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co"># This line does the trick!</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>conf <span class="op">=</span> Config(<span class="op">**</span><span class="bu">dict</span>(os.environ.items()))</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>reveal_type(conf.PORT) <span class="co"># It's a 'int'!</span></span></code></pre></div>
+<p>I got exactly what I was looking for using pydantic in one line of code. That was great because I didn’t had to reinvent the wheel!
+Anyway, my poc taught me a few things about the typing package and type hints:</p>
+<ol type="1">
+<li><p>I can read type hint information at runtime with functions like <code>get_type_hints</code> or <code>get_args</code>.</p></li>
+<li><p>I can pass additional information using <code>typing.Annotated</code>.</p></li>
+<li><p>I can access typing metadata using <code>get_type_hints(thing, include_extras=True)</code> and <code>__metadata__</code>.</p></li>
+</ol>
+<div class="sourceCode" id="cb7"><pre class="sourceCode py"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> typing <span class="im">import</span> Annotated, Type, get_type_hints</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Foo:</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    x: Annotated[<span class="bu">int</span>, <span class="st">'hello'</span>, <span class="st">'wolrd'</span>]</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> print_meta(cl: Type):</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> k, v <span class="kw">in</span> get_type_hints(cl, include_extras<span class="op">=</span><span class="va">True</span>).items():</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(k, <span class="st">' says: '</span>, v.__metadata__)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>print_meta(Foo)</span></code></pre></div>
+<p>It was a fun journey and I enjoyed it! I plan to review more about typing in Python and I’ll keep sharing information about that here!</p>
+<p>Thanks for reading!</p>
+
+<div id="disqus_thread"></div>
+<script>
+/**
+ *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+ *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+ */
+/*
+   var disqus_config = function () {
+   this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+   this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+   };
+ */
+(function() {  // DON'T EDIT BELOW THIS LINE
+ var d = document, s = d.createElement('script');
+
+ s.src = '//cristhianmotochegithubio.disqus.com/embed.js';
+
+ s.setAttribute('data-timestamp', +new Date());
+ (d.head || d.body).appendChild(s);
+ })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+        </div>
+      </div>
+      <footer class="footer">
+        <p class="footer__hakyll">Site proudly generated by: <a href="http://jaspervdj.be/hakyll">Hakyll</a></p>
+        <a class="footer__license" rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">CAMM Blog</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Cristhian Alberto Motoche Macas</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
+      </footer>
+    </div>
+    <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-86039843-1', 'auto');
+    ga('send', 'pageview');
+    </script>
+  </body>
+</html>
