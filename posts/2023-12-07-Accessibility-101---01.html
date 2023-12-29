@@ -32,32 +32,54 @@
         </ul>
       </nav>
       <div class="content">
-        <h1 class="content__title">Long time without writing</h1>
+        <h1 class="content__title">Accessibility 101 - 01</h1>
         <div class="content_body">
           <link href="../css/hk-pyg.css" rel="stylesheet">
 <link href="../css/tables.css" rel="stylesheet">
 <div class="info">
-    Posted on May 26, 2019
+    Posted on December  7, 2023
     
 </div>
 <div class="info">
     
-    Tags: <a title="All pages tagged 'en'." href="../tags/en.html" rel="tag">en</a>, <a title="All pages tagged 'things'." href="../tags/things.html" rel="tag">things</a>
+    Tags: <a title="All pages tagged 'pending'." href="../tags/pending.html" rel="tag">pending</a>
     
 </div>
 
-<p>Hi, dear reader! (Is anyone else than me reading this? :thinking-face:)
-I decided to finally invest some time on this blog post. I’ve been spending my
-time in so many worthless things. So, it’s finally time do invest some time here.
-I’m going to write about lots of things. I’m a software developer, but that’s
-just one things I do, it’s not who I am. In this blog, I hope to reflect who I
-really am. Or, probably not, I don’t know. But, first things first. I think, I
-need to finish a few things in this site:</p>
-<ul class="task-list">
-<li><label><input type="checkbox" />Redesign a little bit (yeah, the site looks like a website from the 90’s).</label></li>
-<li><label><input type="checkbox" />Schedule in my calendar times to write. I’d probaly do it on the weekend or maybe 30 min. a day.</label></li>
+<p>In my previous post, I mentioned that I’ll improve my skills related to Web Development and I decided to start with Accessibility (aka A11y).
+I started watching the series about <a href="https://www.youtube.com/watch?v=Gtc-VMge8ws&amp;list=PL-oQHiI7AbyTKjktowWsj1qy-OH2MoTMX">freeCodeCamp - Accessibility Quiz</a> which follows 50 steps to learn more about A11y. I plan
+to watch the video, take some notes, write down some thoughts, and apply some concepts in my blog post.</p>
+<h1 id="steps-1-10">Steps 1-10</h1>
+<p>Fortunately, we already have most of the following suggestion in the blog:</p>
+<ul>
+<li><code>lang</code> attribute for <code>html</code> tag</li>
 </ul>
-<p>Ok, that’s all for today. See you next post! ByE!</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode html"><code class="sourceCode html"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">html</span> <span class="er">lang</span><span class="ot">=</span><span class="st">'en'</span><span class="dt">&gt;&lt;/</span><span class="kw">html</span><span class="dt">&gt;</span></span></code></pre></div>
+<ul>
+<li><code>meta</code> tag and define <code>charset</code> attribute</li>
+</ul>
+<div class="sourceCode" id="cb2"><pre class="sourceCode html"><code class="sourceCode html"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">meta</span> <span class="er">charset</span><span class="ot">=</span><span class="st">'UTF-8'</span> <span class="dt">/&gt;</span></span></code></pre></div>
+<ul>
+<li><code>meta</code> tag and define <code>viewport</code> with the <code>content</code> attribute</li>
+</ul>
+<div class="sourceCode" id="cb3"><pre class="sourceCode html"><code class="sourceCode html"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">meta</span> <span class="er">name</span><span class="ot">=</span><span class="st">&quot;viewport&quot;</span> <span class="er">content</span><span class="ot">=</span><span class="st">&quot;width=device-width, initial-scale&quot;</span> <span class="dt">/&gt;</span></span></code></pre></div>
+<ul>
+<li><code>meta</code> tag and define <code>description</code> attribute</li>
+</ul>
+<div class="sourceCode" id="cb4"><pre class="sourceCode html"><code class="sourceCode html"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">meta</span> <span class="er">name</span><span class="ot">=</span><span class="st">&quot;description&quot;</span> <span class="er">content</span><span class="ot">=</span><span class="st">&quot;A blog page for people who is interested in programming.&quot;</span><span class="dt">&gt;</span></span></code></pre></div>
+<ul>
+<li><code>title</code> tag to understand the content of a page</li>
+</ul>
+<div class="sourceCode" id="cb5"><pre class="sourceCode html"><code class="sourceCode html"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">title</span><span class="dt">&gt;</span>CAMM Blog<span class="dt">&lt;/</span><span class="kw">title</span><span class="dt">&gt;</span></span></code></pre></div>
+<ul>
+<li>Use semantic HTML elements (e.g. <code>header</code>, <code>nav</code>, <code>main</code>, etc.)</li>
+</ul>
+<p>Those tips are useful but in the video we never got to the point of actually using a screen reader that will use the metadata provided.
+After all, we included all of these tags, attributes, and values so that they could help end users to navigate easily through the site.
+Are we really going getting that goal?</p>
+<p>I tried the <a href="https://wiki.gnome.org/Projects/Orca">orca</a> screen reader and it did used the title to mention the tab that I selected but it didn’t use the other meta tags.
+Nevertheless, the other tags are useful for search engines to present content to reader and then screen readers can be used to tell the
+user what the website is about.</p>
 
 <div id="disqus_thread"></div>
 <script>
