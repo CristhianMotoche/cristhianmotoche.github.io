@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="description" content="A blog page for people who is interested in programming.">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>CAMM Blog</title>
+    <link rel="icon" type="image/png" href="../images/devi.png">
+    <link href="../assets/styles/app.css" rel="stylesheet">
+    <meta name="google-site-verification" content="ZE7UdJw8EgIGYT1wlPQ1IDRaqOa9IseKmfw4ufHxEAk" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+  </head>
+  <body class="body">
+    <div class="body__container">
+      <div class="logo">
+        <h1 class="logo__title">
+          <a class="logo__link" href="../">Camm Blog Page</a>
+        </h1>
+      </div>
+      <nav class="navbar">
+        <ul class="nav-list">
+          <li class="nav-list__item">
+            <a class="nav-list__link" href="../">Home</a>
+          </li>
+          <li class="nav-list__item">
+            <a class="nav-list__link" href="../contact.html">About</a>
+          </li>
+          <li class="nav-list__item">
+            <a class="nav-list__link" href="../archive.html">Archive</a>
+          </li>
+        </ul>
+      </nav>
+      <div class="content">
+        <h1 class="content__title">Accessibility 101 - 02</h1>
+        <div class="content_body">
+          <link href="../css/hk-pyg.css" rel="stylesheet">
+<link href="../css/tables.css" rel="stylesheet">
+<div class="info">
+    Posted on December 31, 2023
+    
+</div>
+<div class="info">
+    
+    Tags: <a title="All pages tagged 'a11y'." href="../tags/a11y.html" rel="tag">a11y</a>
+    
+</div>
+
+<p>All right! I finished watching a new video about accessibility from the playlist that I mentioned in one previous post.
+This time, I decided to go a little bit beyond only taking notes on the things mentioned in the video and I decided to
+research a little bit more about the each topic mentioned. Let’s get started with the learning notes:</p>
+<h1 id="steps-11-20">Steps 11-20</h1>
+<ul>
+<li>ARIA stands for Accessible Rich Internet Applications and it’s a set of attributes for HTML tags that define ways to make the Web more accessible.</li>
+</ul>
+<p>This wasn’t mentioned in the video but I decided to add it first since I think it covers many of the following things to mention.</p>
+<ul>
+<li><p><code>role</code> attribute to indicate the purpose behind an element on a page for assistive technologies.</p></li>
+<li><p><code>aria-label</code> allows users to define a string that labels an element.</p></li>
+</ul>
+<p>This is useful for elements that don’t have a visible text.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode html"><code class="sourceCode html"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">segment</span> <span class="er">role</span><span class="ot">=</span><span class="st">&quot;region&quot;</span> <span class="er">aria-label</span><span class="ot">=</span><span class="st">&quot;Main content&quot;</span><span class="dt">&gt;&lt;/</span><span class="kw">segment</span><span class="dt">&gt;</span></span></code></pre></div>
+<ul>
+<li><code>aria-labelledby</code> enables authors to reference other elements on the page to define an accessible name.</li>
+</ul>
+<p>This is useful when there are visible text within an element but we want other text to be used by assistive technologies.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode html"><code class="sourceCode html"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">button</span> <span class="er">aria-label</span><span class="ot">=</span><span class="st">&quot;Blue&quot;</span> <span class="er">aria-labelledby</span><span class="ot">=</span><span class="st">&quot;color&quot;</span><span class="dt">&gt;</span>Your favorite color<span class="dt">&lt;/</span><span class="kw">button</span><span class="dt">&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">span</span> <span class="er">id</span><span class="ot">=</span><span class="st">&quot;color&quot;</span><span class="dt">&gt;</span>Green<span class="dt">&lt;/</span><span class="kw">span</span><span class="dt">&gt;</span></span></code></pre></div>
+<ul>
+<li><code>label</code> associated to <code>input</code> fields</li>
+</ul>
+<div class="sourceCode" id="cb3"><pre class="sourceCode html"><code class="sourceCode html"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">form</span><span class="dt">&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;</span><span class="kw">label</span> <span class="er">for</span><span class="ot">=</span><span class="st">&quot;name&quot;</span> <span class="er">aria</span><span class="dt">&gt;</span>Name: <span class="dt">&lt;/</span><span class="kw">label</span><span class="dt">&gt;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;</span><span class="kw">input</span> <span class="er">id</span><span class="ot">=</span><span class="st">&quot;name&quot;</span> <span class="dt">/&gt;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;</span><span class="kw">label</span> <span class="er">for</span><span class="ot">=</span><span class="st">&quot;last-name&quot;</span> <span class="er">aria</span><span class="dt">&gt;</span>Lastname: <span class="dt">&lt;/</span><span class="kw">label</span><span class="dt">&gt;</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;</span><span class="kw">input</span> <span class="er">id</span><span class="ot">=</span><span class="st">&quot;last-name&quot;</span> <span class="dt">/&gt;</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">form</span><span class="dt">&gt;</span></span></code></pre></div>
+<p>We don’t have forms in this blog post so this is not necessary but it’s useful
+to remind.</p>
+<p>These fields seem a little bit more useful for assistive technologies and I can use a screen reader to actually get that information and use it!</p>
+
+<div id="disqus_thread"></div>
+<script>
+/**
+ *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+ *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+ */
+/*
+   var disqus_config = function () {
+   this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+   this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+   };
+ */
+(function() {  // DON'T EDIT BELOW THIS LINE
+ var d = document, s = d.createElement('script');
+
+ s.src = '//cristhianmotochegithubio.disqus.com/embed.js';
+
+ s.setAttribute('data-timestamp', +new Date());
+ (d.head || d.body).appendChild(s);
+ })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+        </div>
+      </div>
+      <footer class="footer">
+        <p class="footer__hakyll">Site proudly generated by: <a href="http://jaspervdj.be/hakyll">Hakyll</a></p>
+        <a class="footer__license" rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">CAMM Blog</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Cristhian Alberto Motoche Macas</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
+      </footer>
+    </div>
+    <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-86039843-1', 'auto');
+    ga('send', 'pageview');
+    </script>
+  </body>
+</html>
